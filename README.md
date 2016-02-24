@@ -181,6 +181,8 @@ If you have a solution, then feel free to fork it as well and the changes will b
 
 - Vulkan - *If you're using this in the young days of Vulkan, then make sure that you have the Vulkan driver installed, if any problems occur.*
 - stdlib.h (Standard C library) - needed for calloc() and free()
+- Windows (header) - needed for library loading on Windows
+- dlfcn (header) - needed for library loading on non-Windows OS'
 
 
 ### License & Copyright

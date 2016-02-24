@@ -17,17 +17,19 @@ COPYRIGHT = br'''//=============================================================
 // Dependencies
 //     Vulkan (header and library)
 //     stdlib - needed for calloc() and free()
+//     Windows (header) - needed for library loading on Windows
+//     dlfcn (header) - needed for library loading on non-Windows OS'
 //
 // Notice
 //     Copyright (c) 2016 Vallentin Source <mail@vallentinsource.com>
 //
 // Developers & Contributors
-//     Vallentin Source <mail@vallentinsource.com>
+//     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version
 //     Last Modified Data: February 24, 2016
 //     Revision: 2
-// 
+//
 // Revision History
 //     Revision 2, 2016/02/24
 //       - Created a Python script for automatically generating
@@ -36,6 +38,7 @@ COPYRIGHT = br'''//=============================================================
 //       - Added cross-platform support, for loading libraries
 //         and getting the function addresses.
 //       - Fixed so platform specific functions defaults to NULL
+//       - Added missing include for dlfcn (used on non-Window OS')
 //
 //     Revision 1, 2016/02/23
 //       - Implemented the basic version supporting a few (manually
@@ -49,7 +52,7 @@ COPYRIGHT = br'''//=============================================================
 // OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -249,6 +252,10 @@ C_BODY = br'''
 
 #include <Windows.h>
 
+#else
+
+#include <dlfcn.h>
+
 #endif
 
 #if defined(VKEL_USE_PLATFORM_WIN32)
@@ -345,7 +352,7 @@ with open("vkel.h", "wb") as f:
 	for extension in extensions:
 		lines.append("VkBool32 VKEL_" + extension + ";")
 	
-	# lines.append("")
+	lines.append("")
 	
 	f.write("\n".join(lines).encode("utf-8"))
 	

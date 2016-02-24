@@ -12,17 +12,19 @@
 // Dependencies
 //     Vulkan (header and library)
 //     stdlib - needed for calloc() and free()
+//     Windows (header) - needed for library loading on Windows
+//     dlfcn (header) - needed for library loading on non-Windows OS'
 //
 // Notice
 //     Copyright (c) 2016 Vallentin Source <mail@vallentinsource.com>
 //
 // Developers & Contributors
-//     Vallentin Source <mail@vallentinsource.com>
+//     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version
 //     Last Modified Data: February 24, 2016
 //     Revision: 2
-// 
+//
 // Revision History
 //     Revision 2, 2016/02/24
 //       - Created a Python script for automatically generating
@@ -31,6 +33,7 @@
 //       - Added cross-platform support, for loading libraries
 //         and getting the function addresses.
 //       - Fixed so platform specific functions defaults to NULL
+//       - Added missing include for dlfcn (used on non-Window OS')
 //
 //     Revision 1, 2016/02/23
 //       - Implemented the basic version supporting a few (manually
@@ -44,7 +47,7 @@
 // OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -92,6 +95,7 @@ VkBool32 VKEL_KHR_mir_surface;
 VkBool32 VKEL_KHR_android_surface;
 VkBool32 VKEL_KHR_win32_surface;
 VkBool32 VKEL_EXT_debug_report;
+
 PFN_vkVoidFunction vkelGetProcAddr(const char *name);
 PFN_vkVoidFunction vkelGetInstanceProcAddr(VkInstance instance, const char *pName);
 
@@ -431,42 +435,6 @@ PFN_vkDestroyDebugReportCallbackEXT __vkDestroyDebugReportCallbackEXT;
 PFN_vkDebugReportMessageEXT __vkDebugReportMessageEXT;
 #define vkDebugReportMessageEXT __vkDebugReportMessageEXT
 
-#define vkCreateWin32SurfaceKHR NULL
-#define vkGetPhysicalDeviceWin32PresentationSupportKHR NULL
-
-#ifdef VK_USE_PLATFORM_WIN32_KHR
-PFN_vkCreateWin32SurfaceKHR __vkCreateWin32SurfaceKHR;
-#undef vkCreateWin32SurfaceKHR
-#define vkCreateWin32SurfaceKHR __vkCreateWin32SurfaceKHR
-PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR __vkGetPhysicalDeviceWin32PresentationSupportKHR;
-#undef vkGetPhysicalDeviceWin32PresentationSupportKHR
-#define vkGetPhysicalDeviceWin32PresentationSupportKHR __vkGetPhysicalDeviceWin32PresentationSupportKHR
-#endif /* VK_USE_PLATFORM_WIN32_KHR */
-
-#define vkCreateWaylandSurfaceKHR NULL
-#define vkGetPhysicalDeviceWaylandPresentationSupportKHR NULL
-
-#ifdef VK_USE_PLATFORM_WAYLAND_KHR
-PFN_vkCreateWaylandSurfaceKHR __vkCreateWaylandSurfaceKHR;
-#undef vkCreateWaylandSurfaceKHR
-#define vkCreateWaylandSurfaceKHR __vkCreateWaylandSurfaceKHR
-PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR __vkGetPhysicalDeviceWaylandPresentationSupportKHR;
-#undef vkGetPhysicalDeviceWaylandPresentationSupportKHR
-#define vkGetPhysicalDeviceWaylandPresentationSupportKHR __vkGetPhysicalDeviceWaylandPresentationSupportKHR
-#endif /* VK_USE_PLATFORM_WAYLAND_KHR */
-
-#define vkCreateXlibSurfaceKHR NULL
-#define vkGetPhysicalDeviceXlibPresentationSupportKHR NULL
-
-#ifdef VK_USE_PLATFORM_XLIB_KHR
-PFN_vkCreateXlibSurfaceKHR __vkCreateXlibSurfaceKHR;
-#undef vkCreateXlibSurfaceKHR
-#define vkCreateXlibSurfaceKHR __vkCreateXlibSurfaceKHR
-PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPresentationSupportKHR;
-#undef vkGetPhysicalDeviceXlibPresentationSupportKHR
-#define vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPresentationSupportKHR
-#endif /* VK_USE_PLATFORM_XLIB_KHR */
-
 #define vkCreateAndroidSurfaceKHR NULL
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
@@ -487,6 +455,30 @@ PFN_vkGetPhysicalDeviceMirPresentationSupportKHR __vkGetPhysicalDeviceMirPresent
 #define vkGetPhysicalDeviceMirPresentationSupportKHR __vkGetPhysicalDeviceMirPresentationSupportKHR
 #endif /* VK_USE_PLATFORM_MIR_KHR */
 
+#define vkCreateWaylandSurfaceKHR NULL
+#define vkGetPhysicalDeviceWaylandPresentationSupportKHR NULL
+
+#ifdef VK_USE_PLATFORM_WAYLAND_KHR
+PFN_vkCreateWaylandSurfaceKHR __vkCreateWaylandSurfaceKHR;
+#undef vkCreateWaylandSurfaceKHR
+#define vkCreateWaylandSurfaceKHR __vkCreateWaylandSurfaceKHR
+PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR __vkGetPhysicalDeviceWaylandPresentationSupportKHR;
+#undef vkGetPhysicalDeviceWaylandPresentationSupportKHR
+#define vkGetPhysicalDeviceWaylandPresentationSupportKHR __vkGetPhysicalDeviceWaylandPresentationSupportKHR
+#endif /* VK_USE_PLATFORM_WAYLAND_KHR */
+
+#define vkCreateWin32SurfaceKHR NULL
+#define vkGetPhysicalDeviceWin32PresentationSupportKHR NULL
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+PFN_vkCreateWin32SurfaceKHR __vkCreateWin32SurfaceKHR;
+#undef vkCreateWin32SurfaceKHR
+#define vkCreateWin32SurfaceKHR __vkCreateWin32SurfaceKHR
+PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR __vkGetPhysicalDeviceWin32PresentationSupportKHR;
+#undef vkGetPhysicalDeviceWin32PresentationSupportKHR
+#define vkGetPhysicalDeviceWin32PresentationSupportKHR __vkGetPhysicalDeviceWin32PresentationSupportKHR
+#endif /* VK_USE_PLATFORM_WIN32_KHR */
+
 #define vkCreateXcbSurfaceKHR NULL
 #define vkGetPhysicalDeviceXcbPresentationSupportKHR NULL
 
@@ -498,6 +490,18 @@ PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR __vkGetPhysicalDeviceXcbPresent
 #undef vkGetPhysicalDeviceXcbPresentationSupportKHR
 #define vkGetPhysicalDeviceXcbPresentationSupportKHR __vkGetPhysicalDeviceXcbPresentationSupportKHR
 #endif /* VK_USE_PLATFORM_XCB_KHR */
+
+#define vkCreateXlibSurfaceKHR NULL
+#define vkGetPhysicalDeviceXlibPresentationSupportKHR NULL
+
+#ifdef VK_USE_PLATFORM_XLIB_KHR
+PFN_vkCreateXlibSurfaceKHR __vkCreateXlibSurfaceKHR;
+#undef vkCreateXlibSurfaceKHR
+#define vkCreateXlibSurfaceKHR __vkCreateXlibSurfaceKHR
+PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPresentationSupportKHR;
+#undef vkGetPhysicalDeviceXlibPresentationSupportKHR
+#define vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPresentationSupportKHR
+#endif /* VK_USE_PLATFORM_XLIB_KHR */
 
 #ifdef __cplusplus
 }

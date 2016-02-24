@@ -15,6 +15,8 @@ based on [GLEW](https://github.com/nigels-com/glew) and [gl3w](https://github.co
 First of all either add `vkel.h` and `vkel.c` to the folder that contains `vulkan.h`,
 or open `vkel.h` and edit `#include "vulkan.h"` so it's the correct path to `vulkan.h`.
 
+On Unix-like OS' use `gcc -std=c99 -fPIC -shared -o libvkel.so vkel.c` when building.
+
 After this simply `#include "vkel.h"` and everything should be working. *Do note that this takes
 into account, that the Vulkan library and driver exists on the system.*
 

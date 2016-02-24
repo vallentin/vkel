@@ -30,6 +30,7 @@
 //         Python 3.5.1)
 //       - Added cross-platform support, for loading libraries
 //         and getting the function addresses.
+//       - Fixed so platform specific functions defaults to NULL
 //
 //     Revision 1, 2016/02/23
 //       - Implemented the basic version supporting a few (manually
@@ -430,45 +431,73 @@ PFN_vkDestroyDebugReportCallbackEXT __vkDestroyDebugReportCallbackEXT;
 PFN_vkDebugReportMessageEXT __vkDebugReportMessageEXT;
 #define vkDebugReportMessageEXT __vkDebugReportMessageEXT
 
-#ifdef VK_USE_PLATFORM_XCB_KHR
-PFN_vkCreateXcbSurfaceKHR __vkCreateXcbSurfaceKHR;
-#define vkCreateXcbSurfaceKHR __vkCreateXcbSurfaceKHR
-PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR __vkGetPhysicalDeviceXcbPresentationSupportKHR;
-#define vkGetPhysicalDeviceXcbPresentationSupportKHR __vkGetPhysicalDeviceXcbPresentationSupportKHR
-#endif /* VK_USE_PLATFORM_XCB_KHR */
-
-#ifdef VK_USE_PLATFORM_XLIB_KHR
-PFN_vkCreateXlibSurfaceKHR __vkCreateXlibSurfaceKHR;
-#define vkCreateXlibSurfaceKHR __vkCreateXlibSurfaceKHR
-PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPresentationSupportKHR;
-#define vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPresentationSupportKHR
-#endif /* VK_USE_PLATFORM_XLIB_KHR */
-
-#ifdef VK_USE_PLATFORM_WAYLAND_KHR
-PFN_vkCreateWaylandSurfaceKHR __vkCreateWaylandSurfaceKHR;
-#define vkCreateWaylandSurfaceKHR __vkCreateWaylandSurfaceKHR
-PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR __vkGetPhysicalDeviceWaylandPresentationSupportKHR;
-#define vkGetPhysicalDeviceWaylandPresentationSupportKHR __vkGetPhysicalDeviceWaylandPresentationSupportKHR
-#endif /* VK_USE_PLATFORM_WAYLAND_KHR */
-
-#ifdef VK_USE_PLATFORM_ANDROID_KHR
-PFN_vkCreateAndroidSurfaceKHR __vkCreateAndroidSurfaceKHR;
-#define vkCreateAndroidSurfaceKHR __vkCreateAndroidSurfaceKHR
-#endif /* VK_USE_PLATFORM_ANDROID_KHR */
-
-#ifdef VK_USE_PLATFORM_MIR_KHR
-PFN_vkCreateMirSurfaceKHR __vkCreateMirSurfaceKHR;
-#define vkCreateMirSurfaceKHR __vkCreateMirSurfaceKHR
-PFN_vkGetPhysicalDeviceMirPresentationSupportKHR __vkGetPhysicalDeviceMirPresentationSupportKHR;
-#define vkGetPhysicalDeviceMirPresentationSupportKHR __vkGetPhysicalDeviceMirPresentationSupportKHR
-#endif /* VK_USE_PLATFORM_MIR_KHR */
+#define vkCreateWin32SurfaceKHR NULL
+#define vkGetPhysicalDeviceWin32PresentationSupportKHR NULL
 
 #ifdef VK_USE_PLATFORM_WIN32_KHR
 PFN_vkCreateWin32SurfaceKHR __vkCreateWin32SurfaceKHR;
+#undef vkCreateWin32SurfaceKHR
 #define vkCreateWin32SurfaceKHR __vkCreateWin32SurfaceKHR
 PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR __vkGetPhysicalDeviceWin32PresentationSupportKHR;
+#undef vkGetPhysicalDeviceWin32PresentationSupportKHR
 #define vkGetPhysicalDeviceWin32PresentationSupportKHR __vkGetPhysicalDeviceWin32PresentationSupportKHR
 #endif /* VK_USE_PLATFORM_WIN32_KHR */
+
+#define vkCreateWaylandSurfaceKHR NULL
+#define vkGetPhysicalDeviceWaylandPresentationSupportKHR NULL
+
+#ifdef VK_USE_PLATFORM_WAYLAND_KHR
+PFN_vkCreateWaylandSurfaceKHR __vkCreateWaylandSurfaceKHR;
+#undef vkCreateWaylandSurfaceKHR
+#define vkCreateWaylandSurfaceKHR __vkCreateWaylandSurfaceKHR
+PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR __vkGetPhysicalDeviceWaylandPresentationSupportKHR;
+#undef vkGetPhysicalDeviceWaylandPresentationSupportKHR
+#define vkGetPhysicalDeviceWaylandPresentationSupportKHR __vkGetPhysicalDeviceWaylandPresentationSupportKHR
+#endif /* VK_USE_PLATFORM_WAYLAND_KHR */
+
+#define vkCreateXlibSurfaceKHR NULL
+#define vkGetPhysicalDeviceXlibPresentationSupportKHR NULL
+
+#ifdef VK_USE_PLATFORM_XLIB_KHR
+PFN_vkCreateXlibSurfaceKHR __vkCreateXlibSurfaceKHR;
+#undef vkCreateXlibSurfaceKHR
+#define vkCreateXlibSurfaceKHR __vkCreateXlibSurfaceKHR
+PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPresentationSupportKHR;
+#undef vkGetPhysicalDeviceXlibPresentationSupportKHR
+#define vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPresentationSupportKHR
+#endif /* VK_USE_PLATFORM_XLIB_KHR */
+
+#define vkCreateAndroidSurfaceKHR NULL
+
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+PFN_vkCreateAndroidSurfaceKHR __vkCreateAndroidSurfaceKHR;
+#undef vkCreateAndroidSurfaceKHR
+#define vkCreateAndroidSurfaceKHR __vkCreateAndroidSurfaceKHR
+#endif /* VK_USE_PLATFORM_ANDROID_KHR */
+
+#define vkCreateMirSurfaceKHR NULL
+#define vkGetPhysicalDeviceMirPresentationSupportKHR NULL
+
+#ifdef VK_USE_PLATFORM_MIR_KHR
+PFN_vkCreateMirSurfaceKHR __vkCreateMirSurfaceKHR;
+#undef vkCreateMirSurfaceKHR
+#define vkCreateMirSurfaceKHR __vkCreateMirSurfaceKHR
+PFN_vkGetPhysicalDeviceMirPresentationSupportKHR __vkGetPhysicalDeviceMirPresentationSupportKHR;
+#undef vkGetPhysicalDeviceMirPresentationSupportKHR
+#define vkGetPhysicalDeviceMirPresentationSupportKHR __vkGetPhysicalDeviceMirPresentationSupportKHR
+#endif /* VK_USE_PLATFORM_MIR_KHR */
+
+#define vkCreateXcbSurfaceKHR NULL
+#define vkGetPhysicalDeviceXcbPresentationSupportKHR NULL
+
+#ifdef VK_USE_PLATFORM_XCB_KHR
+PFN_vkCreateXcbSurfaceKHR __vkCreateXcbSurfaceKHR;
+#undef vkCreateXcbSurfaceKHR
+#define vkCreateXcbSurfaceKHR __vkCreateXcbSurfaceKHR
+PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR __vkGetPhysicalDeviceXcbPresentationSupportKHR;
+#undef vkGetPhysicalDeviceXcbPresentationSupportKHR
+#define vkGetPhysicalDeviceXcbPresentationSupportKHR __vkGetPhysicalDeviceXcbPresentationSupportKHR
+#endif /* VK_USE_PLATFORM_XCB_KHR */
 
 #ifdef __cplusplus
 }

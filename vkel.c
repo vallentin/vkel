@@ -30,6 +30,7 @@
 //         Python 3.5.1)
 //       - Added cross-platform support, for loading libraries
 //         and getting the function addresses.
+//       - Fixed so platform specific functions defaults to NULL
 //
 //     Revision 1, 2016/02/23
 //       - Implemented the basic version supporting a few (manually
@@ -345,20 +346,20 @@ VkBool32 vkelInit(void)
 	__vkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT) vkelGetProcAddr("vkDestroyDebugReportCallbackEXT");
 	__vkDebugReportMessageEXT = (PFN_vkDebugReportMessageEXT) vkelGetProcAddr("vkDebugReportMessageEXT");
 
-#ifdef VK_USE_PLATFORM_XCB_KHR
-	__vkCreateXcbSurfaceKHR = (PFN_vkCreateXcbSurfaceKHR) vkelGetProcAddr("vkCreateXcbSurfaceKHR");
-	__vkGetPhysicalDeviceXcbPresentationSupportKHR = (PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR) vkelGetProcAddr("vkGetPhysicalDeviceXcbPresentationSupportKHR");
-#endif /* VK_USE_PLATFORM_XCB_KHR */
-
-#ifdef VK_USE_PLATFORM_XLIB_KHR
-	__vkCreateXlibSurfaceKHR = (PFN_vkCreateXlibSurfaceKHR) vkelGetProcAddr("vkCreateXlibSurfaceKHR");
-	__vkGetPhysicalDeviceXlibPresentationSupportKHR = (PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR) vkelGetProcAddr("vkGetPhysicalDeviceXlibPresentationSupportKHR");
-#endif /* VK_USE_PLATFORM_XLIB_KHR */
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+	__vkCreateWin32SurfaceKHR = (PFN_vkCreateWin32SurfaceKHR) vkelGetProcAddr("vkCreateWin32SurfaceKHR");
+	__vkGetPhysicalDeviceWin32PresentationSupportKHR = (PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR) vkelGetProcAddr("vkGetPhysicalDeviceWin32PresentationSupportKHR");
+#endif /* VK_USE_PLATFORM_WIN32_KHR */
 
 #ifdef VK_USE_PLATFORM_WAYLAND_KHR
 	__vkCreateWaylandSurfaceKHR = (PFN_vkCreateWaylandSurfaceKHR) vkelGetProcAddr("vkCreateWaylandSurfaceKHR");
 	__vkGetPhysicalDeviceWaylandPresentationSupportKHR = (PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR) vkelGetProcAddr("vkGetPhysicalDeviceWaylandPresentationSupportKHR");
 #endif /* VK_USE_PLATFORM_WAYLAND_KHR */
+
+#ifdef VK_USE_PLATFORM_XLIB_KHR
+	__vkCreateXlibSurfaceKHR = (PFN_vkCreateXlibSurfaceKHR) vkelGetProcAddr("vkCreateXlibSurfaceKHR");
+	__vkGetPhysicalDeviceXlibPresentationSupportKHR = (PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR) vkelGetProcAddr("vkGetPhysicalDeviceXlibPresentationSupportKHR");
+#endif /* VK_USE_PLATFORM_XLIB_KHR */
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
 	__vkCreateAndroidSurfaceKHR = (PFN_vkCreateAndroidSurfaceKHR) vkelGetProcAddr("vkCreateAndroidSurfaceKHR");
@@ -369,10 +370,10 @@ VkBool32 vkelInit(void)
 	__vkGetPhysicalDeviceMirPresentationSupportKHR = (PFN_vkGetPhysicalDeviceMirPresentationSupportKHR) vkelGetProcAddr("vkGetPhysicalDeviceMirPresentationSupportKHR");
 #endif /* VK_USE_PLATFORM_MIR_KHR */
 
-#ifdef VK_USE_PLATFORM_WIN32_KHR
-	__vkCreateWin32SurfaceKHR = (PFN_vkCreateWin32SurfaceKHR) vkelGetProcAddr("vkCreateWin32SurfaceKHR");
-	__vkGetPhysicalDeviceWin32PresentationSupportKHR = (PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR) vkelGetProcAddr("vkGetPhysicalDeviceWin32PresentationSupportKHR");
-#endif /* VK_USE_PLATFORM_WIN32_KHR */
+#ifdef VK_USE_PLATFORM_XCB_KHR
+	__vkCreateXcbSurfaceKHR = (PFN_vkCreateXcbSurfaceKHR) vkelGetProcAddr("vkCreateXcbSurfaceKHR");
+	__vkGetPhysicalDeviceXcbPresentationSupportKHR = (PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR) vkelGetProcAddr("vkGetPhysicalDeviceXcbPresentationSupportKHR");
+#endif /* VK_USE_PLATFORM_XCB_KHR */
 
 	VKEL_KHR_surface = vkelIsSupported("VK_KHR_surface");
 	VKEL_KHR_swapchain = vkelIsSupported("VK_KHR_swapchain");

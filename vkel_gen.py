@@ -35,6 +35,7 @@ COPYRIGHT = br'''//=============================================================
 //         Python 3.5.1)
 //       - Added cross-platform support, for loading libraries
 //         and getting the function addresses.
+//       - Fixed so platform specific functions defaults to NULL
 //
 //     Revision 1, 2016/02/23
 //       - Implemented the basic version supporting a few (manually
@@ -358,11 +359,19 @@ with open("vkel.h", "wb") as f:
 	
 	for platform, funcs in platform_funcs.items():
 		if platform:
+			for func in funcs:
+				lines.append("#define {0} NULL".format(func))
+			
+			lines.append("")
 			lines.append("#ifdef " + platform)
 		
 		for func in funcs:
 			# lines.append("PFN_{0} {0};".format(func))
 			lines.append("PFN_{0} __{0};".format(func))
+			
+			if platform:
+				lines.append("#undef {0}".format(func))
+			
 			lines.append("#define {0} __{0}".format(func))
 		
 		if platform:

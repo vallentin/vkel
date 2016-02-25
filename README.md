@@ -140,9 +140,6 @@ int main(int argc, char **argv)
 
 ## API Reference
 
-// Initialize the library once after a Vulkan context has been created.
-// Returns 0 when vkel was initialized successfully, -1 if there was an error.
-
 `VkBool32 vkelInit()`
 > Initialize and load Vulkan along with the function pointers.
 > Returns `VK_TRUE` when vkel was initialized successfully and `VK_FALSE` if

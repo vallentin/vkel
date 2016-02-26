@@ -1,4 +1,6 @@
-**Notice**: vkel will be rewriten shortly, to better differentiate between instance and device related calls. Especially for `vkelIsSupported`.
+**Notice**:
+- vkel will be rewriten shortly, to better differentiate between instance and device related calls. Especially for `vkelIsSupported`.
+- Vulkan 1.0.4 has just been released, some stuff has been renamed which causes vkel to break, this is being fixed right now!
 
 # vkel - Simple Vulkan Extension Loader
 

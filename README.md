@@ -1,3 +1,5 @@
+**Notice**: vkel will be rewriten shortly, to better differentiate between instance and device related calls. Especially for `vkelIsSupported`.
+
 # vkel - Simple Vulkan Extension Loader
 
 *Simple Dynamic Cross-Platform Vulkan Extension Loader*

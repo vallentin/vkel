@@ -242,7 +242,7 @@ int main(int argc, char **argv)
 > Check if instance/device layer is supported.
 
 - `VkBool32 vkelIsInstanceExtensionSupported(const char *pLayerName, const char *pExtensionName)`
--`VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const char *pLayerName, const char *pExtensionName)`
+- `VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const char *pLayerName, const char *pExtensionName)`
 
 > Check if instance/device extension is supported.
 

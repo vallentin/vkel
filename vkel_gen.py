@@ -15,10 +15,11 @@ COPYRIGHT = br'''//=============================================================
 //     extension loader.
 //
 // Dependencies
-//     Vulkan (header and library)
-//     stdlib - needed for calloc() and free()
+//     Vulkan (library)
 //     Windows (header) - needed for library loading on Windows
 //     dlfcn (header) - needed for library loading on non-Windows OS'
+//     Standard C Libraries (stdio, stdlib, string, assert) - needed for NULL, malloc()
+//                                                 calloc(), free(), memset(), assert()
 //
 // Notice
 //     Copyright (c) 2016 Vallentin Source <mail@vallentinsource.com>
@@ -27,10 +28,21 @@ COPYRIGHT = br'''//=============================================================
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version
-//     Last Modified Data: February 24, 2016
-//     Revision: 2
+//     Last Modified Data: February 26, 2016
+//     Revision: 3
 //
 // Revision History
+//     Revision 3, 2016/02/26
+//       - Rewrote vkel_gen.py, now it parses and directly
+//         adds vulkan.h and vk_platform.h into vkel.h,
+//         along with moving the appropriate copyrights
+//         to the top of vkel.h.
+//       - Fixed/added better differentiation for instance
+//         and device related calls.
+//       - Removed the need for having the vukan.h and
+//         vk_platform.h headers.
+//       - Updated support for Vulkan 1.0.4
+//
 //     Revision 2, 2016/02/24
 //       - Created a Python script for automatically generating
 //         all the extensions and their functions. (Tested with
@@ -85,36 +97,116 @@ import re
 
 
 
-if not os.path.exists("vulkan.h"):
+import sys
+
+# The first argument is always the script name,
+# we don't really care about that, so remove it!
+argv = sys.argv[1:]
+argc = len(argv)
+
+force = False
+keep = False
+
+if '-f' in argv:
+	force = True
+
+if '-k' in argv:
+	keep = True
+
+
+
+vulkan_h = ""
+vk_platform_h = ""
+
+
+
+if not force and os.path.exists("vulkan.h"):
+	print("Using existing vulkan.h")
+	
+	with open("vulkan.h", "r") as f:
+		for line in f:
+			vulkan_h += line
+else:
 	print("Downloading vulkan.h from GitHub")
 	print("URL: https://github.com/KhronosGroup/Vulkan-Docs/tree/1.0/src/vulkan")
 	
 	vulkan_h_url = "http://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/1.0/src/vulkan/vulkan.h"
 	vulkan_h_web = urllib2.urlopen(vulkan_h_url)
 	
-	with open("vulkan.h", "wb") as f:
-		f.writelines(vulkan_h_web.readlines())
+	for line in vulkan_h_web.readlines():
+		vulkan_h += line.decode("utf-8")
+	
+	if keep:
+		with open("vulkan.h", "wb") as f:
+			#f.writelines(vulkan_h_web.readlines())
+			f.write(vulkan_h.encode("utf-8"))
+
+
+
+if not force and os.path.exists("vk_platform.h"):
+	print("Using existing vk_platform.h")
+	
+	with open("vk_platform.h", "r") as f:
+		for line in f:
+			vk_platform_h += line
 else:
-	print("Reusing existing vulkan.h")
-
-
-
-if not os.path.exists("vk_platform.h"):
 	print("Downloading vk_platform.h from GitHub")
 	print("URL: https://github.com/KhronosGroup/Vulkan-Docs/tree/1.0/src/vulkan")
 	
 	vk_platform_h_url = "https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/1.0/src/vulkan/vk_platform.h"
 	vk_platform_h_web = urllib2.urlopen(vk_platform_h_url)
 	
-	with open("vk_platform.h", "wb") as f:
-		f.writelines(vk_platform_h_web.readlines())
+	for line in vk_platform_h_web.readlines():
+		vk_platform_h += line.decode("utf-8")
+	
+	if keep:
+		with open("vk_platform.h", "wb") as f:
+			#f.writelines(vk_platform_h_web.readlines())
+			f.write(vk_platform_h.encode("utf-8"))
 
 
 
-print("Parsing vulkan.h")
+print("Parsing vulkan.h and vk_platform.h")
 
 
-# all the functions no matter the platform
+
+extension_names = []
+
+for extension_name in re.findall("#define\s+.*?_EXTENSION_NAME\s+\"VK_(.*?)\"", vulkan_h):
+	extension_names.append(extension_name)
+
+
+# This device extension isn't listed in vulkan.h, to just manually add it for now
+if "NV_glsl_shader" not in extension_names:
+	extension_names.append("NV_glsl_shader")
+
+
+
+# Layers aren't defined in vulkan.h (at the point of writing this at least),
+# so I need to find an easier way of automating. Currently they are hand
+# written using the output of vkEnumerateInstanceLayerProperties.
+layer_names = [
+	# Instance Layers
+	"LAYER_LUNARG_api_dump",
+	"LAYER_LUNARG_device_limits",
+	"LAYER_LUNARG_draw_state",
+	"LAYER_LUNARG_image",
+	"LAYER_LUNARG_mem_tracker",
+	"LAYER_LUNARG_object_tracker",
+	"LAYER_LUNARG_param_checker",
+	"LAYER_LUNARG_screenshot",
+	"LAYER_LUNARG_swapchain",
+	"LAYER_LUNARG_threading",
+	"LAYER_GOOGLE_unique_objects",
+	"LAYER_LUNARG_vktrace",
+	
+	# Device Layers
+	"",
+]
+
+
+
+# all the functions no matter which platform
 all_funcs = []
 
 # all the function but platform specific
@@ -125,7 +217,6 @@ platform_funcs = {
 # current platform
 platform = None
 
-extensions = []
 
 
 # regex_function = re.compile(r"PFN_(\w+)")
@@ -134,108 +225,334 @@ regex_function = re.compile(r"VKAPI_PTR\s+\*PFN_(\w+)")
 regex_platform_begin = re.compile(r"#ifdef\s+(VK_USE_PLATFORM\w+)")
 regex_platform_end = re.compile(r"#endif\s+/\*\s*(\w+)\s*\*/")
 
-regex_extension = re.compile(r"#define\s+\w+_EXTENSION_NAME\s+\"VK_(\w+)\"")
 
-
-with open("vulkan.h", "r") as f:
-	for line in f:
-		match_platform = regex_platform_begin.search(line)
-		
-		if match_platform:
+for line in vulkan_h.splitlines():
+	match_platform = regex_platform_begin.search(line)
+	
+	if match_platform:
 			platform = match_platform.group(1)
 			
 			if platform not in platform_funcs:
 				platform_funcs[platform] = []
+	
+	
+	match_platform = regex_platform_end.search(line)
+	
+	if match_platform:
+		if platform == match_platform.group(1):
+			platform = None
+	
+	
+	match_func = regex_function.search(line)
+	
+	if match_func:
+		func = match_func.group(1)
 		
-		
-		match_platform = regex_platform_end.search(line)
-		
-		if match_platform:
-			if platform == match_platform.group(1):
-				platform = None
-		
-		
-		match_func = regex_function.search(line)
-		
-		if match_func:
-			func = match_func.group(1)
+		if func not in all_funcs:
+			all_funcs.append(func)
 			
-			if func not in all_funcs:
-				all_funcs.append(func)
-				
-				if platform is None:
-					platform_funcs[""].append(func)
-				else:
-					platform_funcs[platform].append(func)
-		
-		
-		match_extension = regex_extension.search(line)
-		
-		if match_extension:
-			extension = match_extension.group(1)
-			
-			if extension not in extensions:
-				extensions.append(extension)
+			if platform is None:
+				platform_funcs[""].append(func)
+			else:
+				platform_funcs[platform].append(func)
 
 
 
+print("Processing vulkan.h and vk_platform.h")
 
-H_HEADER = br'''#pragma once
-#ifndef _vkel_h_
-#define _vkel_h_ 1
+
+
+def process_source_code(source):
+	# Remove extern (we gonna add one overall later)
+	source = re.compile("\s*?#\s*?ifdef\s+__cplusplus.*?#endif.*?$", re.S | re.I | re.M).sub("", source)
+	
+	# Remove everything within VK_NO_PROTOTYPES
+	source = re.compile(r"^\s*?#\s*?ifndef VK_NO_PROTOTYPES.*?^#\s*endif", re.S | re.M).sub("", source)
+	
+	
+	# Remove multi-line comments
+	source = re.compile("\/\*[\s\S]*?\*\/").sub("", source)
+	
+	# Remove single-line comments, which are at the beginning of a line
+	source = re.compile("^//.*?\r?\n", re.M).sub("", source)
+	
+	
+	# Trim lines that only contain whitespace
+	source = re.compile("^\s+$", re.M).sub("", source)
+	
+	# Turn repeating new lines into 1 new line
+	source = re.compile(r"^(\r?\n)\s*?(\r?\n\s*?)+^", re.M).sub(r"\1", source)
+	
+	# Trim leading and trailing whitespace
+	source = source.strip()
+	
+	
+	return source
+
+
+
+# This works by selecting the longest found multi-line comment,
+# that contains the word "copyright" case-insensitive.
+def get_copyright(source):
+	longest = ""
+	
+	re_copyright = re.compile("copyright", re.I)
+	
+	for comment in re.findall("\/\*[\s\S]*?\*\/", vulkan_h, re.M):
+		if re_copyright.search(comment):
+			if len(comment) > len(longest):
+				longest = comment
+	
+	# Is it empty?
+	if not longest:
+		return None
+	
+	# Trim it
+	longest = longest.strip()
+	
+	# Then add 2 new lines (just for formatting purposes in vkel)
+	longest += "\n\n"
+	
+	return longest
+
+
+
+vulkan_h_copyright = get_copyright(vulkan_h)
+vk_platform_h_copyright = get_copyright(vulkan_h)
+
+# Are they identical copyrights?
+if vulkan_h_copyright == vk_platform_h_copyright:
+	# Then just remove one of them
+	vk_platform_h_copyright = None
+
+
+
+vk_platform_h = process_source_code(vk_platform_h)
+vulkan_h = process_source_code(vulkan_h)
+
+vulkan_h = re.compile(r"^\s*#\s*include\s+\"vk_platform.h\"", re.I | re.M).sub(vk_platform_h, vulkan_h)
+
+vulkan_h = process_source_code(vulkan_h)
+
+
+
+print("Generating vkel.h")
+
+
+
+def add_copyright(f):
+	f.write(COPYRIGHT)
+	
+	if vulkan_h_copyright:
+		f.write(vulkan_h_copyright.encode("utf-8"))
+	
+	if vk_platform_h_copyright:
+		f.write(vk_platform_h_copyright.encode("utf-8"))
+
+
+
+with open("vkel.h", "wb") as f:
+	add_copyright(f)
+	
+	
+	f.write(br'''#ifndef _VKEL_H_
 #define _VKEL_H_ 1
 
 #ifdef __cplusplus
 extern "C" {
+#endif /* __cplusplus */
+
+
+#if !defined(_WIN32) && (defined(__WIN32__) || defined(WIN32) || defined(__MINGW32__))
+#	define _WIN32
+#endif /* _WIN32 */
+
+#if defined(_WIN32)
+#	ifndef VK_USE_PLATFORM_WIN32_KHR
+#		define VK_USE_PLATFORM_WIN32_KHR 1
+#	endif
+#elif defined(__ANDROID__) && defined(__ARM_EABI__) && !defined(__ARM_ARCH_7A__)
+#	ifndef VK_USE_PLATFORM_ANDROID_KHR
+#		define VK_USE_PLATFORM_ANDROID_KHR 1
+#	endif
+// #elif defined(__linux__) || defined(__unix__)
+#else
+#	ifndef VK_USE_PLATFORM_XCB_KHR
+#		define VK_USE_PLATFORM_XCB_KHR 1
+#	endif
+// #else
+// #	error You need to open vkel.h and add a #define VK_USE_PLATFORM_*_KHR. Please also report your OS on https://github.com/VallentinSource/vkel
 #endif
 
-// #define VK_NO_PROTOTYPES
-#include "vulkan.h"
+''')
+	
+	
+	
+	f.write(br'''
+#ifdef __vulkan_h_
 
-// #ifndef __vulkan_h_
-// #	error vulkan.h not included
-// #endif
+#if _MSC_VER
+#	pragma message("Warning: Vulkan 1.0.4's include guard was changed from __vulkan_h_ to VULKAN_H_, so you might need to update your vulkan.h file")
+#elif __GNUC__
+#	warning "Warning: Vulkan 1.0.4's include guard was changed from __vulkan_h_ to VULKAN_H_, so you might need to update your vulkan.h file"
+#endif
 
-// #ifndef VK_NO_PROTOTYPES
-// #	error #define VK_NO_PROTOTYPES before including vulkan.h
-// #endif
-'''
+#endif /* __vulkan_h_ */
 
-H_BODY = br'''
-PFN_vkVoidFunction vkelGetProcAddr(const char *name);
+
+''')
+	
+	# vulkan_h contains vk_platform_h
+	f.write(vulkan_h.encode("utf-8"))
+	f.write(b"\n\n")
+	
+	
+	f.write(br'''
+PFN_vkVoidFunction vkelGetProcAddr(const char *pName);
+
 PFN_vkVoidFunction vkelGetInstanceProcAddr(VkInstance instance, const char *pName);
+PFN_vkVoidFunction vkelGetDeviceProcAddr(VkDevice device, const char *pName);
 
-VkBool32 vkelIsSupported(const char *extension);
+
+void vkelDeleteNames(uint32_t nameCount, char **names);
+
+
+char** vkelGetInstanceExtensionNames(const char *pLayerName, uint32_t *extensionNameCount);
+#define vkelDeleteInstanceExtensionNames vkelDeleteNames
+
+char** vkelGetInstanceLayerNames(uint32_t *layerNameCount);
+#define vkelDeleteInstanceLayerNames vkelDeleteNames
+
+
+char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *pLayerName, uint32_t *extensionNameCount);
+#define vkelDeleteDeviceExtensionNames vkelDeleteNames
+
+char** vkelGetDeviceLayerNames(VkPhysicalDevice physicalDevice, uint32_t *layerNameCount);
+#define vkelDeleteDeviceLayerNames vkelDeleteNames
+
+
+VkBool32 vkelIsInstanceLayerSupported(const char *pLayerName);
+VkBool32 vkelIsInstanceExtensionSupported(const char *pLayerName, const char *pExtensionName);
+
+VkBool32 vkelIsDeviceLayerSupported(VkPhysicalDevice physicalDevice, const char *pLayerName);
+VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const char *pLayerName, const char *pExtensionName);
+
 
 VkBool32 vkelInit(void);
-void vkelUninit(void);
-'''
+VkBool32 vkelInstanceInit(VkInstance instance);
+VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device);
 
-H_FOOTER = br'''
+void vkelUninit(void);
+
+
+''')
+	
+	
+	
+	f.write(b"// Instance and device extension names\n")
+	
+	# Are there any (instance or device) extensions? (is array empty)
+	if extension_names:
+		for extension_name in sorted(extension_names):
+			if extension_name:
+				f.write("VkBool32 VKEL_{0};\n".format(extension_name).encode("utf-8"))
+	
+	f.write(b"\n")
+	
+	
+	
+	f.write(b"// Instance and device layer names\n")
+	
+	# Are there any (instance or device) layers? (is array empty)
+	if layer_names:
+		for layer_name in sorted(layer_names):
+			if layer_name:
+				f.write("VkBool32 VKEL_{0};\n".format(layer_name).encode("utf-8"))
+	
+	f.write(b"\n\n")
+	
+	
+	
+	lines = []
+	
+	# Generate all function pointers
+	for platform in sorted(platform_funcs):
+		if platform:
+			lines.append("#ifdef " + platform)
+		
+		for func in sorted(platform_funcs[platform]):
+			# lines.append("PFN_{0} {0};".format(func))
+			lines.append("PFN_{0} __{0};".format(func))
+		
+		if platform:
+			lines.append("#endif /* " + platform + " */")
+		
+		lines.append("")
+	
+	# Generate NULL pointers for platform specific functions
+	for platform in sorted(platform_funcs):
+		if platform:
+			lines.append("// {0}".format(platform))
+			
+			for func in sorted(platform_funcs[platform]):
+				lines.append("#define {0} NULL".format(func))
+			
+			lines.append("")
+		else:
+			for func in sorted(platform_funcs[platform]):
+				lines.append("#define {0} __{0}".format(func))
+	
+	# Generate platform specific functions
+	for platform in sorted(platform_funcs):
+		if platform:
+			lines.append("#ifdef " + platform)
+			
+			for func in sorted(platform_funcs[platform]):
+				lines.append("#undef {0}".format(func))
+			
+			for func in sorted(platform_funcs[platform]):
+				lines.append("#define {0} __{0}".format(func))
+			
+			lines.append("#endif /* " + platform + " */")
+			lines.append("")
+	
+	lines.append("")
+	
+	f.write("\n".join(lines).encode("utf-8"))
+	
+	
+	
+	f.write(br'''
 #ifdef __cplusplus
 }
-#endif
+#endif /* __cplusplus */
 
-#endif /* _vkel_h_ */'''
+#endif /* _vkel_h_ */''')
 
 
 
-C_HEADER = br'''#include "vkel.h"
+print("Generating vkel.c")
+
+
+
+with open("vkel.c", "wb") as f:
+	add_copyright(f)
+	
+	
+	f.write(br'''#include "vkel.h"
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif /* __cplusplus */
 
-// Required for calloc() and free()
-#include <stdlib.h>
-'''
 
-C_BODY = br'''
-#if defined(VK_USE_PLATFORM_WIN32_KHR) || defined(_WIN32) || defined(_WIN64)
-#	define VKEL_USE_PLATFORM_WIN32
-#endif
+#include <stdio.h> /* NULL, printf() */
+#include <stdlib.h> /* malloc(), calloc(), free() */
+#include <string.h> /* memset() */
+#include <assert.h> /* assert() */
 
-#ifdef VKEL_USE_PLATFORM_WIN32
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
 
 #ifndef VC_EXTRALEAN
 #	define VC_EXTRALEAN
@@ -245,20 +562,20 @@ C_BODY = br'''
 #	define WIN32_LEAN_AND_MEAN
 #endif
 
-// STOP THAT WINDOWS!
+// STOP THAT, BAD WINDOWS!
 #ifndef NOMINMAX
 #	define NOMINMAX
 #endif
 
 #include <Windows.h>
-
 #else
 
 #include <dlfcn.h>
 
 #endif
 
-#if defined(VKEL_USE_PLATFORM_WIN32)
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
 #	define vkelPlatformOpenLibrary(name) LoadLibraryA(name)
 #	define vkelPlatformCloseLibrary(handle) FreeLibrary((HMODULE) handle)
 #	define vkelPlatformGetProcAddr(handle, name) GetProcAddress((HMODULE) handle, name)
@@ -271,11 +588,16 @@ C_BODY = br'''
 // #	error VKEL Unsupported Platform
 #endif
 
-static void *vkel_vk_lib_handle;
+static void *vkelVkLibHandle;
 
+
+''')
+	
+	
+	f.write(br'''
 PFN_vkVoidFunction vkelGetProcAddr(const char *name)
 {
-	return (PFN_vkVoidFunction) vkelPlatformGetProcAddr(vkel_vk_lib_handle, name);
+	return (PFN_vkVoidFunction) vkelPlatformGetProcAddr(vkelVkLibHandle, name);
 }
 
 PFN_vkVoidFunction vkelGetInstanceProcAddr(VkInstance instance, const char *pName)
@@ -288,151 +610,355 @@ PFN_vkVoidFunction vkelGetInstanceProcAddr(VkInstance instance, const char *pNam
 	return proc;
 }
 
+PFN_vkVoidFunction vkelGetDeviceProcAddr(VkDevice device, const char *pName)
+{
+	PFN_vkVoidFunction proc = (PFN_vkVoidFunction) vkGetDeviceProcAddr(device, pName);
+	
+	if (!proc)
+		proc = (PFN_vkVoidFunction) vkelGetInstanceProcAddr(NULL, pName);
+	
+	return proc;
+}
+
+
 static int vkel_strcmp(const char *str1, const char *str2)
 {
 	while (*str1 && (*str1 == *str2))
 	{
 		str1++, str2++;
 	}
-	
+
 	return *(const unsigned char*) str1 - *(const unsigned char*) str2;
 }
 
-VkBool32 vkelIsSupported(const char *extension)
+static void vkel_strpy(char *dest, char *src)
 {
-	if (!extension)
-		return VK_FALSE;
-	
-	uint32_t count;
-	VkResult err = vkEnumerateInstanceExtensionProperties(NULL, &count, NULL);
-	
-	if (!err)
+	while (*dest++ = *src++);
+}
+
+
+void vkelDeleteNames(uint32_t nameCount, char **names)
+{
+	// assert(names);
+	if (!names)
+		return;
+
+	for (uint32_t nameIndex = 0; nameIndex < nameCount; nameIndex++)
 	{
-		VkExtensionProperties *ext_props = (VkExtensionProperties*) calloc(count, sizeof(VkExtensionProperties));
-		err = vkEnumerateInstanceExtensionProperties(NULL, &count, ext_props);
-		
-		if (!err)
-		{
-			for (uint32_t i = 0; i < count; i++)
-			{
-				if (!vkel_strcmp(extension, ext_props[i].extensionName))
-				{
-					free(ext_props);
-					
-					return VK_TRUE;
-				}
-			}
-		}
-		
-		free(ext_props);
+		// assert(names[nameIndex]);
+		if (!names[nameIndex])
+			continue;
+
+		free(names[nameIndex]);
 	}
-	
+
+	free(names);
+}
+
+
+char** vkelGetInstanceExtensionNames(const char *pLayerName, uint32_t *extensionNameCount)
+{
+	assert(extensionNameCount);
+
+
+	VkResult err;
+
+
+	uint32_t extPropertyCount;
+	err = vkEnumerateInstanceExtensionProperties(pLayerName, &extPropertyCount, NULL);
+	assert(!err);
+
+	(*extensionNameCount) = extPropertyCount;
+
+	if (extPropertyCount < 1)
+		return NULL;
+
+
+	char **extensionNames = (char**) calloc(extPropertyCount, sizeof(char*));
+
+	for (uint32_t extensionNameIndex = 0; extensionNameIndex < extPropertyCount; extensionNameIndex++)
+	{
+		extensionNames[extensionNameIndex] = (char*)calloc(VK_MAX_EXTENSION_NAME_SIZE, sizeof(char));
+	}
+
+
+	VkExtensionProperties *extProperties = (VkExtensionProperties*) calloc(extPropertyCount, sizeof(VkExtensionProperties));
+	assert(extProperties);
+
+
+	err = vkEnumerateInstanceExtensionProperties(pLayerName, &extPropertyCount, extProperties);
+	assert(!err);
+
+	for (uint32_t extPropertyIndex = 0; extPropertyIndex < extPropertyCount; extPropertyIndex++)
+	{
+		VkExtensionProperties extProperty = extProperties[extPropertyIndex];
+
+		vkel_strpy(extensionNames[extPropertyIndex], extProperty.extensionName);
+	}
+
+
+	free(extProperties);
+
+
+	return extensionNames;
+}
+
+char** vkelGetInstanceLayerNames(uint32_t *layerNameCount)
+{
+	assert(layerNameCount);
+
+
+	VkResult err;
+
+
+	uint32_t layerPropertyCount;
+	err = vkEnumerateInstanceLayerProperties(&layerPropertyCount, NULL);
+	assert(!err);
+
+	(*layerNameCount) = layerPropertyCount;
+
+	if (layerPropertyCount < 1)
+		return NULL;
+
+
+	char **layerNames = (char**) calloc(layerPropertyCount, sizeof(char*));
+
+	for (uint32_t layerNameIndex = 0; layerNameIndex < layerPropertyCount; layerNameIndex++)
+	{
+		layerNames[layerNameIndex] = (char*) calloc(VK_MAX_EXTENSION_NAME_SIZE, sizeof(char));
+	}
+
+
+	VkLayerProperties *layerProperties = (VkLayerProperties*) calloc(layerPropertyCount, sizeof(VkLayerProperties));
+	assert(layerProperties);
+
+	err = vkEnumerateInstanceLayerProperties(&layerPropertyCount, layerProperties);
+	assert(!err);
+
+	for (uint32_t layerPropertyIndex = 0; layerPropertyIndex < layerPropertyCount; layerPropertyIndex++)
+	{
+		VkLayerProperties layerProperty = layerProperties[layerPropertyIndex];
+
+		vkel_strpy(layerNames[layerPropertyIndex], layerProperty.layerName);
+	}
+
+
+	free(layerProperties);
+
+
+	return layerNames;
+}
+
+
+char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *pLayerName, uint32_t *extensionNameCount)
+{
+	assert(extensionNameCount);
+
+
+	VkResult err;
+
+
+	uint32_t extPropertyCount;
+	err = vkEnumerateDeviceExtensionProperties(physicalDevice, pLayerName, &extPropertyCount, NULL);
+	assert(!err);
+
+	(*extensionNameCount) = extPropertyCount;
+
+	if (extPropertyCount < 1)
+		return NULL;
+
+
+	char **extensionNames = (char**) calloc(extPropertyCount, sizeof(char*));
+
+	for (uint32_t extensionNameIndex = 0; extensionNameIndex < extPropertyCount; extensionNameIndex++)
+	{
+		extensionNames[extensionNameIndex] = (char*) calloc(VK_MAX_EXTENSION_NAME_SIZE, sizeof(char));
+	}
+
+
+	VkExtensionProperties *extProperties = (VkExtensionProperties*) calloc(extPropertyCount, sizeof(VkExtensionProperties));
+	assert(extProperties);
+
+
+	err = vkEnumerateDeviceExtensionProperties(physicalDevice, pLayerName, &extPropertyCount, extProperties);
+	assert(!err);
+
+	for (uint32_t extPropertyIndex = 0; extPropertyIndex < extPropertyCount; extPropertyIndex++)
+	{
+		VkExtensionProperties extProperty = extProperties[extPropertyIndex];
+
+		vkel_strpy(extensionNames[extPropertyIndex], extProperty.extensionName);
+	}
+
+
+	free(extProperties);
+
+
+	return extensionNames;
+}
+
+char** vkelGetDeviceLayerNames(VkPhysicalDevice physicalDevice, uint32_t *layerNameCount)
+{
+	assert(layerNameCount);
+
+
+	VkResult err;
+
+
+	uint32_t layerPropertyCount;
+	err = vkEnumerateDeviceLayerProperties(physicalDevice, &layerPropertyCount, NULL);
+	assert(!err);
+
+	(*layerNameCount) = layerPropertyCount;
+
+	if (layerPropertyCount < 1)
+		return NULL;
+
+
+	char **layerNames = (char**) calloc(layerPropertyCount, sizeof(char*));
+
+	for (uint32_t layerNameIndex = 0; layerNameIndex < layerPropertyCount; layerNameIndex++)
+	{
+		layerNames[layerNameIndex] = (char*) calloc(VK_MAX_EXTENSION_NAME_SIZE, sizeof(char));
+	}
+
+
+	VkLayerProperties *layerProperties = (VkLayerProperties*) calloc(layerPropertyCount, sizeof(VkLayerProperties));
+	assert(layerProperties);
+
+	err = vkEnumerateDeviceLayerProperties(physicalDevice, &layerPropertyCount, layerProperties);
+	assert(!err);
+
+	for (uint32_t layerPropertyIndex = 0; layerPropertyIndex < layerPropertyCount; layerPropertyIndex++)
+	{
+		VkLayerProperties layerProperty = layerProperties[layerPropertyIndex];
+
+		vkel_strpy(layerNames[layerPropertyIndex], layerProperty.layerName);
+	}
+
+
+	free(layerProperties);
+
+
+	return layerNames;
+}
+
+
+VkBool32 vkelIsInstanceLayerSupported(const char *pLayerName)
+{
+	uint32_t layerNameCount = 0;
+	char **layerNames = vkelGetInstanceLayerNames(&layerNameCount);
+
+	for (uint32_t layerNameIndex = 0; layerNameIndex < layerNameCount; layerNameIndex++)
+	{
+		if (vkel_strcmp(layerNames[layerNameIndex], pLayerName))
+		{
+			vkelDeleteInstanceLayerNames(layerNameCount, layerNames);
+
+			return VK_TRUE;
+		}
+	}
+
+	vkelDeleteInstanceLayerNames(layerNameCount, layerNames);
+
 	return VK_FALSE;
 }
-'''
 
-C_FOOTER = br'''
-#ifdef __cplusplus
+VkBool32 vkelIsInstanceExtensionSupported(const char *pLayerName, const char *pExtensionName)
+{
+	uint32_t extensionNameCount = 0;
+	char **extensionNames = vkelGetInstanceExtensionNames(pLayerName, &extensionNameCount);
+
+	for (uint32_t extensionNameIndex = 0; extensionNameIndex < extensionNameCount; extensionNameIndex++)
+	{
+		if (vkel_strcmp(extensionNames[extensionNameIndex], pExtensionName))
+		{
+			vkelDeleteInstanceExtensionNames(extensionNameCount, extensionNames);
+
+			return VK_TRUE;
+		}
+	}
+
+	vkelDeleteInstanceExtensionNames(extensionNameCount, extensionNames);
+
+	return VK_FALSE;
 }
-#endif'''
 
 
+VkBool32 vkelIsDeviceLayerSupported(VkPhysicalDevice physicalDevice, const char *pLayerName)
+{
+	uint32_t layerNameCount = 0;
+	char **layerNames = vkelGetDeviceLayerNames(physicalDevice, &layerNameCount);
 
-print("Generating vkel.h")
+	for (uint32_t layerNameIndex = 0; layerNameIndex < layerNameCount; layerNameIndex++)
+	{
+		if (vkel_strcmp(layerNames[layerNameIndex], pLayerName))
+		{
+			vkelDeleteDeviceLayerNames(layerNameCount, layerNames);
 
-with open("vkel.h", "wb") as f:
-	f.write(COPYRIGHT)
-	f.write(H_HEADER)
+			return VK_TRUE;
+		}
+	}
+
+	vkelDeleteDeviceLayerNames(layerNameCount, layerNames);
+
+	return VK_FALSE;
+}
+
+VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const char *pLayerName, const char *pExtensionName)
+{
+	uint32_t extensionNameCount = 0;
+	char **extensionNames = vkelGetDeviceExtensionNames(physicalDevice, pLayerName, &extensionNameCount);
+
+	for (uint32_t extensionNameIndex = 0; extensionNameIndex < extensionNameCount; extensionNameIndex++)
+	{
+		if (vkel_strcmp(extensionNames[extensionNameIndex], pExtensionName))
+		{
+			vkelDeleteDeviceExtensionNames(extensionNameCount, extensionNames);
+
+			return VK_TRUE;
+		}
+	}
+
+	vkelDeleteDeviceExtensionNames(extensionNameCount, extensionNames);
+
+	return VK_FALSE;
+}
+
+''')
 	
 	
-	lines = []
 	
-	lines.append("")
-	
-	for extension in extensions:
-		lines.append("VkBool32 VKEL_" + extension + ";")
-	
-	lines.append("")
-	
-	f.write("\n".join(lines).encode("utf-8"))
-	
-	
-	f.write(H_BODY)
-	
-	
-	lines = []
-	
-	lines.append("")
-	
-	for platform, funcs in platform_funcs.items():
-		if platform:
-			for func in funcs:
-				lines.append("#define {0} NULL".format(func))
-			
-			lines.append("")
-			lines.append("#ifdef " + platform)
+	# vkelInit()
 		
-		for func in funcs:
-			# lines.append("PFN_{0} {0};".format(func))
-			lines.append("PFN_{0} __{0};".format(func))
-			
-			if platform:
-				lines.append("#undef {0}".format(func))
-			
-			lines.append("#define {0} __{0}".format(func))
-		
-		if platform:
-			lines.append("#endif /* " + platform + " */")
-		
-		lines.append("")
-	
-	# lines.append("")
-	
-	f.write("\n".join(lines).encode("utf-8"))
-	
-	
-	f.write(H_FOOTER)
-
-
-
-print("Generating vkel.c")
-
-with open("vkel.c", "wb") as f:
-	f.write(COPYRIGHT)
-	f.write(C_HEADER)
-	f.write(C_BODY)
-	
-	
 	f.write(br'''
 VkBool32 vkelInit(void)
 {
 	vkelUninit();
 	
-#ifdef VKEL_USE_PLATFORM_WIN32
+#ifdef VK_USE_PLATFORM_WIN32_KHR
 	const char *name = "vulkan-1.dll";
 #else
 	const char *name = "libvulkan.so.1";
 #endif
 	
-	vkel_vk_lib_handle = vkelPlatformOpenLibrary(name);
+	vkelVkLibHandle = vkelPlatformOpenLibrary(name);
 	
-	if (!vkel_vk_lib_handle)
+	if (!vkelVkLibHandle)
 		return VK_FALSE;
+	
+	
 ''')
+	
 	
 	
 	lines = []
 	
-	lines.append("")
-	
-	for platform, funcs in platform_funcs.items():
+	for platform in sorted(platform_funcs):
 		if platform:
 			lines.append("#ifdef " + platform)
 		
-		for func in funcs:
-			# lines.append("PFN_{0} {0};".format(func))
-			# lines.append("PFN_{0} __{0};".format(func))
-			# lines.append("#define {0} __{0}".format(func))
+		for func in sorted(platform_funcs[platform]):
 			lines.append("\t__{0} = (PFN_{0}) vkelGetProcAddr(\"{0}\");".format(func))
 		
 		if platform:
@@ -440,32 +966,196 @@ VkBool32 vkelInit(void)
 		
 		lines.append("")
 	
-	for extension in extensions:
-		lines.append("\tVKEL_" + extension + " = vkelIsSupported(\"VK_" + extension + "\");")
+	lines.append("")
+	
+	
+	
+	lines.append("\t// Instance and device extension names")
+	
+	# Are there any (instance or device) extensions? (is array empty)
+	if extension_names:
+		for extension_name in sorted(extension_names):
+			if extension_name:
+				lines.append("\tVKEL_" + extension_name + " = vkelIsInstanceExtensionSupported(NULL, \"VK_" + extension_name + "\");")
 	
 	lines.append("")
-	# lines.append("")
+	
+	
+	lines.append("\t// Instance and device layer names")
+	
+	# Are there any (instance or device) layers? (is array empty)
+	if layer_names:
+		for layer_name in sorted(layer_names):
+			if layer_name:
+				lines.append("\tVKEL_" + layer_name + " = vkelIsInstanceLayerSupported(\"VK_" + layer_name + "\");")
+	
+	lines.append("")
+	
+	
 	
 	f.write("\n".join(lines).encode("utf-8"))
 	
 	
+	
 	f.write(br'''
+	
 	return VK_TRUE;
 }
-
-void vkelUninit(void)
-{
-	if (vkel_vk_lib_handle)
-	{
-		vkelPlatformCloseLibrary(vkel_vk_lib_handle);
+	''')
+	
+	
+	
+	# vkelInstanceInit()
 		
-		vkel_vk_lib_handle = NULL;
-	}
-}
+	f.write(br'''
+VkBool32 vkelInstanceInit(VkInstance instance)
+{
+	if (!vkelVkLibHandle && !vkelInit())
+		return VK_FALSE;
+	
+	
 ''')
 	
 	
-	f.write(C_FOOTER)
+	
+	lines = []
+	
+	for platform in sorted(platform_funcs):
+		if platform:
+			lines.append("#ifdef " + platform)
+		
+		for func in sorted(platform_funcs[platform]):
+			lines.append("\t__{0} = (PFN_{0}) vkelGetInstanceProcAddr(instance, \"{0}\");".format(func))
+		
+		if platform:
+			lines.append("#endif /* " + platform + " */")
+		
+		lines.append("")
+	
+	lines.append("")
+	
+	
+	
+	lines.append("\t// Instance and device extension names")
+	
+	# Are there any (instance or device) extensions? (is array empty)
+	if extension_names:
+		for extension_name in sorted(extension_names):
+			if extension_name:
+				lines.append("\tVKEL_" + extension_name + " = vkelIsInstanceExtensionSupported(NULL, \"VK_" + extension_name + "\");")
+	
+	lines.append("")
+	
+	
+	lines.append("\t// Instance and device layer names")
+	
+	# Are there any (instance or device) layers? (is array empty)
+	if layer_names:
+		for layer_name in sorted(layer_names):
+			if layer_name:
+				lines.append("\tVKEL_" + layer_name + " = vkelIsInstanceLayerSupported(\"VK_" + layer_name + "\");")
+	
+	lines.append("")
+	
+	
+	
+	f.write("\n".join(lines).encode("utf-8"))
+	
+	
+	
+	f.write(br'''
+	
+	return VK_TRUE;
+}
+	''')
+	
+	
+	
+	# vkelDeviceInit()
+	
+	f.write(br'''
+VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
+{
+	if (!vkelVkLibHandle && !vkelInit())
+		return VK_FALSE;
+	
+	
+''')
+	
+	
+	
+	lines = []
+	
+	for platform in sorted(platform_funcs):
+		if platform:
+			lines.append("#ifdef " + platform)
+		
+		for func in sorted(platform_funcs[platform]):
+			lines.append("\t__{0} = (PFN_{0}) vkelGetDeviceProcAddr(device, \"{0}\");".format(func))
+		
+		if platform:
+			lines.append("#endif /* " + platform + " */")
+		
+		lines.append("")
+	
+	lines.append("")
+	
+	
+	
+	lines.append("\t// Instance and device extension names")
+	
+	# Are there any (instance or device) extensions? (is array empty)
+	if extension_names:
+		for extension_name in sorted(extension_names):
+			if extension_name:
+				lines.append("\tVKEL_" + extension_name + " = vkelIsDeviceExtensionSupported(physicalDevice, NULL, \"VK_" + extension_name + "\");")
+	
+	lines.append("")
+	
+	
+	lines.append("\t// Instance and device layer names")
+	
+	# Are there any (instance or device) layers? (is array empty)
+	if layer_names:
+		for layer_name in sorted(layer_names):
+			if layer_name:
+				lines.append("\tVKEL_" + layer_name + " = vkelIsDeviceLayerSupported(physicalDevice, \"VK_" + layer_name + "\");")
+	
+	lines.append("")
+	
+	
+	
+	f.write("\n".join(lines).encode("utf-8"))
+	
+	
+	
+	f.write(br'''
+	
+	return VK_TRUE;
+}
+	''')
+	
+	
+	
+	f.write(br'''
+void vkelUninit(void)
+{
+	if (vkelVkLibHandle)
+	{
+		vkelPlatformCloseLibrary(vkelVkLibHandle);
+		vkelVkLibHandle = NULL;
+	}
+}
+	''')
+	
+	f.write(b"\n")
+	
+	
+	
+	f.write(br'''
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */''')
 
 
 

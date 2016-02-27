@@ -1,34 +1,47 @@
-**Notice**:
-- vkel will be rewriten shortly, to better differentiate between instance and device related calls. Especially for `vkelIsSupported`.
-- Vulkan 1.0.4 has just been released, some stuff has been renamed which causes vkel to break, this is being fixed right now!
-
 # vkel - Simple Vulkan Extension Loader
 
 *Simple Dynamic Cross-Platform Vulkan Extension Loader*
 
 ## Introduction
 
-[vkel](https://github.com/VallentinSource/vkel) is a simple and easy way of dynamically loading
+[vkel](https://github.com/MrVallentin/vkel) is a simple and easy way of dynamically loading
 Vulkan and its function pointers.
+[vkel](https://github.com/MrVallentin/vkel) can also be used to check which (instance or device)
+extensions and layers are available.
 
-*Also yes, the idea of [vkel](https://github.com/VallentinSource/vkel) is indeed
+*Also yes, the idea of [vkel](https://github.com/MrVallentin/vkel) is indeed
 based on [GLEW](https://github.com/nigels-com/glew) and [gl3w](https://github.com/skaslev/gl3w).*
+
+**Notice**: Vulkan was just updated to version 1.0.4, your driver might not support that, so you probably need to use `VK_MAKE_VERSION(1, 0, 3)` instead of `VK_API_VERSION` for now.
 
 ## Setup
 
-First of all either add `vkel.h` and `vkel.c` to the folder that contains `vulkan.h`,
-or open `vkel.h` and edit `#include "vulkan.h"` so it's the correct path to `vulkan.h`.
+[vkel](https://github.com/MrVallentin/vkel) doesn't (any more) require the vulkan headers.
+So simply download [vkel.h](https://github.com/MrVallentin/vkel/blob/master/vkel.h) and
+[vkel.c](https://github.com/MrVallentin/vkel/blob/master/vkel.c) and you're done!
+*Do note that this takes into account, that the Vulkan library and driver exists on the system.*
 
-On Unix-like OS' use `gcc -std=c99 -fPIC -shared -o libvkel.so vkel.c` when building.
+### Unix-like OS
 
-After this simply `#include "vkel.h"` and everything should be working. *Do note that this takes
-into account, that the Vulkan library and driver exists on the system.*
+On Unix-like OS' you might have to build using `-fPIC` (Position Independent Code).
+
+Example: `gcc -Wall -g -fPIC -shared -o libvkel.so vkel.c`
+
+*Before the building problem on UNIX was encountered, someone responded that he/she
+was using `gcc -std=c99 -fPIC -shared -o libvkel.so vkel.c` when building.*
 
 ## Generating
 
-The only thing needed is `vkel_gen.py`. When executing this Python script it will download `vulkan.h`, `vk_platform.h`,
-from the official [Khronos Group Vulkan repository](https://github.com/KhronosGroup/Vulkan-Docs). Then it parses `vulkan.h`
-and generates `vkel.h` and `vkel.c`. All these files are stored within the same directory as `vkel_gen.py`.
+Overall the only thing needed is [vkel_gen.py](https://github.com/MrVallentin/vkel/blob/master/vkel_gen.py).
+When executing the script will temporarily download `vulkan.h` and `vk_platform.h`. Though if they already
+exist within the same folder as [vkel_gen.py](https://github.com/MrVallentin/vkel/blob/master/vkel_gen.py),
+then it will fallback to using them. Be aware that when new versions of the Vulkan headers are available,
+this can create problems.
+
+*There's also two flags you can use when executing the script:*
+
+- `-f`: force, always download `vulkan.h` and `vk_platform.h`
+- `-k`: keep, save `vulkan.h` and `vk_platform.h`
 
 *Note: `vkel_gen.py` is developed and tested using Python 3.5.1.*
 
@@ -38,7 +51,13 @@ Vulkan does not have a context unlike OpenGL. You create a Vulkan instance, and 
 to OpenGL the Vulkan instance is created via the Vulkan API itself.
 *In other words `vkelInit()` can be called as the first thing, without needing anything else beforehand!*
 
+Though along the way function pointers are needed according to the created `VkInstance` and `VkDevice`,
+for that simply use `vkelInstanceInit()` and `vkelDeviceInit()` to reload function pointers and re-check
+support for extensions and layers. This is all done relative to the given instance or device.
+
 ```c
+#include <stdio.h> // needed for fprintf()
+
 #include "vkel.h"
 
 int main(int argc, char **argv)
@@ -49,7 +68,27 @@ int main(int argc, char **argv)
 	if (!vkelInit())
 	{
 		fprintf(stderr, "Failed to initialize Vulkan\n");
-    	return -1;
+		return -1;
+	}
+	
+	
+	VkInstance instance;
+	// Do all the stuff to create a VkInstance
+	
+	if (!vkelInstanceInit(instance))
+	{
+		fprintf(stderr, "Failed to initialize Vulkan with VkInstance\n");
+		return -1;
+	}
+	
+	
+	VkDevice device;
+	// Do all the stuff to create a VkDevice
+	
+	if (!vkelDeviceInit(device))
+	{
+		fprintf(stderr, "Failed to initialize Vulkan with VkDevice\n");
+		return -1;
 	}
 	
 	
@@ -63,8 +102,15 @@ int main(int argc, char **argv)
 		// The extension is supported
 	}
 	
+	// Statically check if the extension is supported
+	if (VKEL_NV_glsl_shader)
+	{
+		// The extension is supported
+	}
+	
+	
 	// Dynamically check if the extension is supported
-	if (vkelIsSupported("VK_KHR_android_surface"))
+	if (vkelIsInstanceExtensionSupported(NULL, "VK_KHR_android_surface"))
 	{
 		// The extension is supported
 	}
@@ -82,7 +128,9 @@ int main(int argc, char **argv)
 	// or when (if ever) using a modified Vulkan library.
 	
 	// Manually load function
-	PFN_vkQueuePresentKHR fpvkQueuePresentKHR = (PFN_vkQueuePresentKHR) vkelGetProcAddr("vkQueuePresentKHR");
+	PFN_vkQueuePresentKHR pfnQueuePresentKHR = (PFN_vkQueuePresentKHR) vkelGetProcAddr("vkQueuePresentKHR");
+	PFN_vkQueuePresentKHR pfnQueuePresentKHR = (PFN_vkQueuePresentKHR) vkelGetInstanceProcAddr(instance, "vkQueuePresentKHR");
+	PFN_vkQueuePresentKHR pfnQueuePresentKHR = (PFN_vkQueuePresentKHR) vkelGetDeviceProcAddr(device, "vkQueuePresentKHR");
 	
 	
 	// Release the Vulkan library again (the OS will also do this automatically of course).
@@ -95,10 +143,23 @@ int main(int argc, char **argv)
 
 ## Example: List Supported Extensions
 
-*This example isn't anything special to VKEL, but it shows which extensions the system supports.*
+[vkel](https://github.com/MrVallentin/vkel) can also be used to list all
+supported extensions and layers using:
+
+- `vkelGetInstanceExtensionNames`
+- `vkelGetInstanceLayerNames`
+- `vkelGetDeviceExtensionNames`
+- `vkelGetDeviceLayerNames`
+
+Individual extensions and layers can be checked using:
+
+- `vkelIsInstanceLayerSupported`
+- `vkelIsInstanceExtensionSupported`
+- `vkelIsDeviceLayerSupported`
+- `vkelIsDeviceExtensionSupported`
 
 ```c
-#include <stdio.h> // needed for getchar() and printf()
+#include <stdio.h> // needed for getchar(), printf() and fprintf()
 #include <stdlib> // needed for calloc() and free()
 
 #include "vkel.h"
@@ -108,27 +169,25 @@ int main(int argc, char **argv)
 	if (!vkelInit())
 	{
 		fprintf(stderr, "Failed to initialize Vulkan\n");
-    	return -1;
+		return -1;
 	}
 	
-	uint32_t count;
-	VkResult err = vkEnumerateInstanceExtensionProperties(NULL, &count, NULL);
-
-	if (!err)
+	
+	uint32_t extensionNameCount = 0;
+	char **extensionNames = vkelGetInstanceExtensionNames(NULL, &extensionNameCount);
+	
+	printf("Count: %d\n", extensionNameCount);
+	
+	for (uint32_t extensionNameIndex = 0; extensionNameIndex < extensionNameCount; extensionNameIndex++)
 	{
-		VkExtensionProperties *ext_props = (VkExtensionProperties*) calloc(count, sizeof(VkExtensionProperties));
-		err = vkEnumerateInstanceExtensionProperties(NULL, &count, ext_props);
-		
-		if (!err)
-		{
-			for (uint32_t i = 0; i < count; i++)
-			{
-				printf("%s  \t extension revision: %d\n", ext_props[i].extensionName, ext_props[i].specVersion);
-			}
-		}
-
-		free(ext_props);
+		printf("Extension %d: %s\n", (extensionNameIndex + 1), extensionNames[extensionNameIndex]);
 	}
+	
+	printf("\n");
+	
+	vkelDeleteInstanceExtensionNames(extensionNameCount, extensionNames);
+	extensionNames = NULL;
+	
 	
 	// Pause, so we get to see something before it exits
 	getchar();
@@ -144,28 +203,72 @@ int main(int argc, char **argv)
 
 ## API Reference
 
-`VkBool32 vkelInit()`
-> Initialize and load Vulkan along with the function pointers.
-> Returns `VK_TRUE` when vkel was initialized successfully and `VK_FALSE` if
-> the Vulkan library couldn't be loaded (most likely meaning that the
-> library is missing).
+
+### Initialize
+
+`VkBool32 vkelInit(void)`
+> Initialize and load Vulkan along with the function pointers. Returns `VK_TRUE` when vkel was
+> initialized successfully and `VK_FALSE` if the Vulkan library couldn't be loaded (most likely
+> meaning that the library is missing).
+
+`VkBool32 vkelInstanceInit(VkInstance instance)`
+> Reload function pointers according to the given `VkInstance`. This also re-checks
+> support for extensions and layers.
+
+`VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)`
+> Reload function pointers according to the given `VkDevice`. This also re-checks
+> support for extensions and layers, using the given `VkPhysicalDevice`.
+
+`void vkelUninit(void)`
+> Free the Vulkan library (the OS will do this automatically if `vkelUninit()` isn't called).
+
+### Function Pointers
 
 `PFN_vkVoidFunction vkelGetProcAddr(const char *name)`
 > Get a function pointer from the loaded Vulkan library.
 
 `PFN_vkVoidFunction vkelGetInstanceProcAddr(VkInstance instance, const char *pName)`
-> Shortcut for `vkGetInstanceProcAddr()` and if that returns NULL, then
-> `vkelGetProcAddr()`.
+> Shortcut for calling `vkGetInstanceProcAddr()`, but if it returns NULL, then call `vkelGetProcAddr()`.
 
-`vkelIsSupported(const char *extension)`
-> Check if the current system supports a given Vulkan extension.
-> Use `vkelIsSupported("VK_KHR_android_surface")` for dynamic checking or
-> `if (VKEL_KHR_android_surface)` for static checking. The difference being
-> that the static version is checked when `vkelInit()` is called, and the dynamic
-> version is checked again the Vulkan API every time.
+`PFN_vkVoidFunction vkelGetDeviceProcAddr(VkDevice device, const char *pName)`
+> Shortcut for calling `vkGetDeviceProcAddr()`, but if it returns NULL, then call `vkelGetInstanceProcAddr()`.
 
-`void vkelUninit()`
-> Free the Vulkan library (the OS will do this automatically if `vkelUninit()` isn't called).
+
+### Check Supported Extensions/Layers
+
+`VkBool32 vkelIsInstanceLayerSupported(const char *pLayerName)`
+> Check if instance layer is supported.
+
+`VkBool32 vkelIsInstanceExtensionSupported(const char *pLayerName, const char *pExtensionName)`
+> Check if instance extension is supported.
+
+`VkBool32 vkelIsDeviceLayerSupported(VkPhysicalDevice physicalDevice, const char *pLayerName)`
+> Check if device layer is supported.
+
+`VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const char *pLayerName, const char *pExtensionName)`
+> Check if device extension is supported.
+
+*Remember that they can be checking using the extension name itself. With the
+minor change of having the prefix `VKEL_` instead of `VK_`. Example, `VK_KHR_win32_surface` would
+be `VKEL_KHR_win32_surface`.*
+
+
+### Listing Supported Extensions/Layers
+
+*Check the example above.*
+
+`char** vkelGetInstanceExtensionNames(const char *pLayerName, uint32_t *extensionNameCount)`
+> Get an array of all the supported instance extension names.
+
+`char** vkelGetInstanceLayerNames(uint32_t *layerNameCount)`
+> Get an array of all the supported instance layer names.
+
+`char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *pLayerName, uint32_t *extensionNameCount)`
+> Get an array of all the supported device extension names.
+
+`char** vkelGetDeviceLayerNames(VkPhysicalDevice physicalDevice, uint32_t *layerNameCount)`
+> Get an array of all the supported device layer names.
+
 
 
 ## Reporting Bugs & Requests
@@ -173,7 +276,7 @@ int main(int argc, char **argv)
 Feel free to use the [issue tracker](https://github.com/VallentinSource/vkel/issues).
 Please always include the name and version of the OS where the bug occurs.
 
-*I don't have the means to test this on the different OS'. So any confirmation would be much obliged.*
+*I don't have the means to test this on all the different OS'. So any confirmation would be much obliged.*
 
 If you have a solution, then feel free to fork it as well and the changes will be included.
 
@@ -181,9 +284,9 @@ If you have a solution, then feel free to fork it as well and the changes will b
 ## Dependencies
 
 - Vulkan - *If you're using this in the young days of Vulkan, then make sure that you have the Vulkan driver installed, if any problems occur.*
-- stdlib.h (Standard C library) - needed for calloc() and free()
 - Windows (header) - needed for library loading on Windows
 - dlfcn (header) - needed for library loading on non-Windows OS'
+- Standard C Libraries (stdio, stdlib, string, assert) - needed for NULL, malloc() calloc(), free(), memset(), assert()
 
 
 ### License & Copyright

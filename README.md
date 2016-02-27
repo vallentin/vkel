@@ -12,7 +12,7 @@ extensions and layers are available.
 *Also yes, the idea of [vkel](https://github.com/MrVallentin/vkel) is indeed
 based on [GLEW](https://github.com/nigels-com/glew) and [gl3w](https://github.com/skaslev/gl3w).*
 
-**Notice**: Vulkan was just updated to version 1.0.4, your driver might not support that, so you probably need to use `VK_MAKE_VERSION(1, 0, 3)` instead of `VK_API_VERSION` for now.
+**Notice:** Vulkan was just updated to version 1.0.4, your driver might not support that, so you probably need to use `VK_MAKE_VERSION(1, 0, 3)` instead of `VK_API_VERSION` for now.
 
 ## Setup
 
@@ -258,22 +258,25 @@ be `VKEL_KHR_win32_surface`.*
 *Check the example above.*
 
 `char** vkelGetInstanceExtensionNames(const char *pLayerName, uint32_t *extensionNameCount)`
-> Get an array of all the supported instance extension names.
+`char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *pLayerName, uint32_t *extensionNameCount)`
+> Get an array of all the supported instance/device extension names.
 
 `char** vkelGetInstanceLayerNames(uint32_t *layerNameCount)`
-> Get an array of all the supported instance layer names.
-
-`char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *pLayerName, uint32_t *extensionNameCount)`
-> Get an array of all the supported device extension names.
-
 `char** vkelGetDeviceLayerNames(VkPhysicalDevice physicalDevice, uint32_t *layerNameCount)`
-> Get an array of all the supported device layer names.
+> Get an array of all the supported instance/device layer names.
 
+- `void vkelDeleteInstanceExtensionNames(uint32_t extensionNameCount, char **extensionNames)`
+- `void vkelDeleteInstanceLayerNames(uint32_t layerNameCount, char **layerNames)`
+- `void vkelDeleteDeviceExtensionNames(uint32_t extensionNameCount, char **extensionNames)`
+- `void vkelDeleteDeviceLayerNames(uint32_t layerNameCount, char **layerNames)`
+
+> The return `char**` can be manually deleted, but the above function exist for simplifying
+> the process. The above functions are also just `#define`'s of `vkelDeleteNames()`
 
 
 ## Reporting Bugs & Requests
 
-Feel free to use the [issue tracker](https://github.com/VallentinSource/vkel/issues).
+Feel free to use the [issue tracker](https://github.com/MrVallentin/vkel/issues).
 Please always include the name and version of the OS where the bug occurs.
 
 *I don't have the means to test this on all the different OS'. So any confirmation would be much obliged.*

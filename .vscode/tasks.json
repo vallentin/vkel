@@ -1,0 +1,14 @@
+{
+	"version": "0.1.0",
+	"showOutput": "always",
+	
+	"windows": {
+		"command": "python",
+		"showOutput": "always"
+	},
+	
+	// "args": [ "${workspaceRoot}/vkel_gen.py" ]
+	"args": [ "${workspaceRoot}/vkel_gen.py", "-f" ]
+	// "args": [ "${workspaceRoot}/vkel_gen.py", "-k" ]
+	// "args": [ "${workspaceRoot}/vkel_gen.py", "-f", "-k" ]
+}

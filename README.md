@@ -236,17 +236,15 @@ int main(int argc, char **argv)
 
 ### Check Supported Extensions/Layers
 
-`VkBool32 vkelIsInstanceLayerSupported(const char *pLayerName)`
-> Check if instance layer is supported.
+- `VkBool32 vkelIsInstanceLayerSupported(const char *pLayerName)`
+- `VkBool32 vkelIsDeviceLayerSupported(VkPhysicalDevice physicalDevice, const char *pLayerName)`
 
-`VkBool32 vkelIsInstanceExtensionSupported(const char *pLayerName, const char *pExtensionName)`
-> Check if instance extension is supported.
+> Check if instance/device layer is supported.
 
-`VkBool32 vkelIsDeviceLayerSupported(VkPhysicalDevice physicalDevice, const char *pLayerName)`
-> Check if device layer is supported.
+- `VkBool32 vkelIsInstanceExtensionSupported(const char *pLayerName, const char *pExtensionName)`
+-`VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const char *pLayerName, const char *pExtensionName)`
 
-`VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const char *pLayerName, const char *pExtensionName)`
-> Check if device extension is supported.
+> Check if instance/device extension is supported.
 
 *Remember that they can be checking using the extension name itself. With the
 minor change of having the prefix `VKEL_` instead of `VK_`. Example, `VK_KHR_win32_surface` would
@@ -257,12 +255,14 @@ be `VKEL_KHR_win32_surface`.*
 
 *Check the example above.*
 
-`char** vkelGetInstanceExtensionNames(const char *pLayerName, uint32_t *extensionNameCount)`
-`char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *pLayerName, uint32_t *extensionNameCount)`
+- `char** vkelGetInstanceExtensionNames(const char *pLayerName, uint32_t *extensionNameCount)`
+- `char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *pLayerName, uint32_t *extensionNameCount)`
+
 > Get an array of all the supported instance/device extension names.
 
-`char** vkelGetInstanceLayerNames(uint32_t *layerNameCount)`
-`char** vkelGetDeviceLayerNames(VkPhysicalDevice physicalDevice, uint32_t *layerNameCount)`
+- `char** vkelGetInstanceLayerNames(uint32_t *layerNameCount)`
+- `char** vkelGetDeviceLayerNames(VkPhysicalDevice physicalDevice, uint32_t *layerNameCount)`
+
 > Get an array of all the supported instance/device layer names.
 
 - `void vkelDeleteInstanceExtensionNames(uint32_t extensionNameCount, char **extensionNames)`

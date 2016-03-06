@@ -8,7 +8,7 @@ COPYRIGHT = br'''//=============================================================
 //     Vulkan (Cross-Platform) Extension Loader
 //
 // Repository
-//     https://github.com/VallentinSource/vkel
+//     https://github.com/MrVallentin/vkel
 //
 // Overview
 //     This is a simple, dynamic and tiny cross-platform Vulkan
@@ -22,16 +22,19 @@ COPYRIGHT = br'''//=============================================================
 //                                                 calloc(), free(), memset(), assert()
 //
 // Notice
-//     Copyright (c) 2016 Vallentin Source <mail@vallentinsource.com>
+//     Copyright (c) 2016 Christian Vallentin <mail@vallentinsource.com>
 //
 // Developers & Contributors
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version
-//     Last Modified Data: February 26, 2016
-//     Revision: 3
+//     Last Modified Data: March 06, 2016
+//     Revision: 4
 //
 // Revision History
+//     Revision 4, 2016/03/06
+//       - Updated support for Vulkan 1.0.5
+//
 //     Revision 3, 2016/02/26
 //       - Rewrote vkel_gen.py, now it parses and directly
 //         adds vulkan.h and vk_platform.h into vkel.h,

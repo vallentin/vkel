@@ -2,6 +2,8 @@
 
 *Simple Dynamic Cross-Platform Vulkan Extension Loader*
 
+*Updated for [Vulkan 1.0.5](https://www.khronos.org/registry/vulkan/#apispecs).*
+
 ## Introduction
 
 [vkel](https://github.com/MrVallentin/vkel) is a simple and easy way of dynamically loading

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # Allow Python 2.6+ to use the print() function
 from __future__ import print_function
@@ -27,11 +27,15 @@ COPYRIGHT = br'''//=============================================================
 // Developers & Contributors
 //     Christian Vallentin <mail@vallentinsource.com>
 //
-// Version
-//     Last Modified Data: March 06, 2016
-//     Revision: 4
+// Version History
+//     Last Modified Date: March 12, 2016
+//     Revision: 5
+//     Version: 2.0.2
 //
 // Revision History
+//     Revision 5, 2016/03/12
+//       - Updated support for Vulkan 1.0.6
+//
 //     Revision 4, 2016/03/06
 //       - Updated support for Vulkan 1.0.5
 //
@@ -384,7 +388,7 @@ extern "C" {
 #		define VK_USE_PLATFORM_XCB_KHR 1
 #	endif
 // #else
-// #	error You need to open vkel.h and add a #define VK_USE_PLATFORM_*_KHR. Please also report your OS on https://github.com/VallentinSource/vkel
+// #	error You need to open vkel.h and add a #define VK_USE_PLATFORM_*_KHR. Please also report your OS on https://github.com/MrVallentin/vkel
 #endif
 
 ''')
@@ -530,7 +534,7 @@ void vkelUninit(void);
 }
 #endif /* __cplusplus */
 
-#endif /* _vkel_h_ */''')
+#endif /* _VKEL_H_ */''')
 
 
 

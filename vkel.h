@@ -22,11 +22,15 @@
 // Developers & Contributors
 //     Christian Vallentin <mail@vallentinsource.com>
 //
-// Version
-//     Last Modified Data: March 06, 2016
-//     Revision: 4
+// Version History
+//     Last Modified Date: March 12, 2016
+//     Revision: 5
+//     Version: 2.0.2
 //
 // Revision History
+//     Revision 5, 2016/03/12
+//       - Updated support for Vulkan 1.0.6
+//
 //     Revision 4, 2016/03/06
 //       - Updated support for Vulkan 1.0.5
 //
@@ -128,7 +132,7 @@ extern "C" {
 #		define VK_USE_PLATFORM_XCB_KHR 1
 #	endif
 // #else
-// #	error You need to open vkel.h and add a #define VK_USE_PLATFORM_*_KHR. Please also report your OS on https://github.com/VallentinSource/vkel
+// #	error You need to open vkel.h and add a #define VK_USE_PLATFORM_*_KHR. Please also report your OS on https://github.com/MrVallentin/vkel
 #endif
 
 
@@ -218,11 +222,12 @@ extern "C" {
 #define VK_MAKE_VERSION(major, minor, patch) \
     (((major) << 22) | ((minor) << 12) | (patch))
 
-#define VK_API_VERSION VK_MAKE_VERSION(1, 0, 5)
+#define VK_API_VERSION_1_0 VK_MAKE_VERSION(1, 0, 0)
 
 #define VK_VERSION_MAJOR(version) ((uint32_t)(version) >> 22)
 #define VK_VERSION_MINOR(version) (((uint32_t)(version) >> 12) & 0x3ff)
 #define VK_VERSION_PATCH(version) ((uint32_t)(version) & 0xfff)
+#define VK_HEADER_VERSION 6
 
 #define VK_NULL_HANDLE 0
 
@@ -851,6 +856,7 @@ typedef enum VkDynamicState {
 typedef enum VkFilter {
     VK_FILTER_NEAREST = 0,
     VK_FILTER_LINEAR = 1,
+    VK_FILTER_CUBIC_IMG = 1000015000,
     VK_FILTER_BEGIN_RANGE = VK_FILTER_NEAREST,
     VK_FILTER_END_RANGE = VK_FILTER_LINEAR,
     VK_FILTER_RANGE_SIZE = (VK_FILTER_LINEAR - VK_FILTER_NEAREST + 1),
@@ -980,6 +986,7 @@ typedef enum VkFormatFeatureFlagBits {
     VK_FORMAT_FEATURE_BLIT_SRC_BIT = 0x00000400,
     VK_FORMAT_FEATURE_BLIT_DST_BIT = 0x00000800,
     VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = 0x00001000,
+    VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG = 0x00002000,
 } VkFormatFeatureFlagBits;
 typedef VkFlags VkFormatFeatureFlags;
 
@@ -2928,6 +2935,10 @@ typedef void (VKAPI_PTR *PFN_vkDebugReportMessageEXT)(VkInstance instance, VkDeb
 #define VK_NV_GLSL_SHADER_SPEC_VERSION    1
 #define VK_NV_GLSL_SHADER_EXTENSION_NAME  "VK_NV_glsl_shader"
 
+#define VK_IMG_filter_cubic 1
+#define VK_IMG_FILTER_CUBIC_SPEC_VERSION  1
+#define VK_IMG_FILTER_CUBIC_EXTENSION_NAME "VK_IMG_filter_cubic"
+
 #endif
 
 
@@ -2970,6 +2981,7 @@ void vkelUninit(void);
 
 // Instance and device extension names
 VkBool32 VKEL_EXT_debug_report;
+VkBool32 VKEL_IMG_filter_cubic;
 VkBool32 VKEL_KHR_android_surface;
 VkBool32 VKEL_KHR_display;
 VkBool32 VKEL_KHR_display_swapchain;
@@ -3426,4 +3438,4 @@ PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPrese
 }
 #endif /* __cplusplus */
 
-#endif /* _vkel_h_ */
+#endif /* _VKEL_H_ */

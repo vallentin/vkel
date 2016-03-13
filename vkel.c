@@ -22,11 +22,15 @@
 // Developers & Contributors
 //     Christian Vallentin <mail@vallentinsource.com>
 //
-// Version
-//     Last Modified Data: March 06, 2016
-//     Revision: 4
+// Version History
+//     Last Modified Date: March 12, 2016
+//     Revision: 5
+//     Version: 2.0.2
 //
 // Revision History
+//     Revision 5, 2016/03/12
+//       - Updated support for Vulkan 1.0.6
+//
 //     Revision 4, 2016/03/06
 //       - Updated support for Vulkan 1.0.5
 //
@@ -700,6 +704,7 @@ VkBool32 vkelInit(void)
 
 	// Instance and device extension names
 	VKEL_EXT_debug_report = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_report");
+	VKEL_IMG_filter_cubic = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_filter_cubic");
 	VKEL_KHR_android_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_android_surface");
 	VKEL_KHR_display = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_display");
 	VKEL_KHR_display_swapchain = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_display_swapchain");
@@ -935,6 +940,7 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 
 	// Instance and device extension names
 	VKEL_EXT_debug_report = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_report");
+	VKEL_IMG_filter_cubic = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_filter_cubic");
 	VKEL_KHR_android_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_android_surface");
 	VKEL_KHR_display = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_display");
 	VKEL_KHR_display_swapchain = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_display_swapchain");
@@ -1170,6 +1176,7 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 
 	// Instance and device extension names
 	VKEL_EXT_debug_report = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_EXT_debug_report");
+	VKEL_IMG_filter_cubic = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_IMG_filter_cubic");
 	VKEL_KHR_android_surface = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_android_surface");
 	VKEL_KHR_display = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_display");
 	VKEL_KHR_display_swapchain = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_display_swapchain");

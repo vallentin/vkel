@@ -2,7 +2,7 @@
 
 *Simple Dynamic Cross-Platform Vulkan Extension Loader*
 
-*Updated for [Vulkan 1.0.5](https://www.khronos.org/registry/vulkan/#apispecs).*
+*Updated for [Vulkan 1.0.6](https://www.khronos.org/registry/vulkan/#apispecs).*
 
 ## Introduction
 
@@ -14,7 +14,9 @@ extensions and layers are available.
 *Also yes, the idea of [vkel](https://github.com/MrVallentin/vkel) is indeed
 based on [GLEW](https://github.com/nigels-com/glew) and [gl3w](https://github.com/skaslev/gl3w).*
 
-**Notice:** Vulkan was just updated to version 1.0.4, your driver might not support that, so you probably need to use `VK_MAKE_VERSION(1, 0, 3)` instead of `VK_API_VERSION` for now.
+**Notice:** ~~Your driver might not support the newest released patch, so instead of using
+`VK_API_VERSION` use something like `VK_MAKE_VERSION(1, 0, 3)`.~~ In Vulkan 1.0.6 the
+`VK_API_VERSION` macro was deprecated and removed, in favor of using `VK_MAKE_VERSION(1, 0, 6)`.
 
 ## Setup
 

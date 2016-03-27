@@ -2,16 +2,27 @@
 
 *Simple Dynamic Cross-Platform Vulkan Extension Loader*
 
-*Updated for [Vulkan 1.0.6](https://www.khronos.org/registry/vulkan/#apispecs).*
+*Updated for [Vulkan 1.0.7](https://www.khronos.org/registry/vulkan/#apispecs).*
+
+
+- [Vulkan 1.0.7 Specification](https://www.khronos.org/registry/vulkan/specs/1.0/xhtml/vkspec.html)
+- [Vulkan 1.0.7 + WSI Extension Specification](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/xhtml/vkspec.html)
+
+
+- [Vulkan 1.0.7 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/8c3c9b4c85f2539b67148c2de9e2573154c92786)
+- [Vulkan 1.0.6 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/1f875738fd9bd0aca5d36bf36794b4b2903e74a9)
+- [Vulkan 1.0.5 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/7380aee56b53e9ea3647186ec477202f7f17e28c)
+- [Vulkan 1.0.4 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5a4c5e5925c65c6e6677c1fb21571684b4b0a77b)
+
 
 ## Introduction
 
-[vkel](https://github.com/MrVallentin/vkel) is a simple and easy way of dynamically loading
+[vkel][vkel] is a simple and easy way of dynamically loading
 Vulkan and its function pointers.
-[vkel](https://github.com/MrVallentin/vkel) can also be used to check which (instance or device)
+[vkel][vkel] can also be used to check which (instance or device)
 extensions and layers are available.
 
-*Also yes, the idea of [vkel](https://github.com/MrVallentin/vkel) is indeed
+*Also yes, the idea of [vkel][vkel] is indeed
 based on [GLEW](https://github.com/nigels-com/glew) and [gl3w](https://github.com/skaslev/gl3w).*
 
 **Notice:** ~~Your driver might not support the newest released patch, so instead of using
@@ -20,9 +31,9 @@ based on [GLEW](https://github.com/nigels-com/glew) and [gl3w](https://github.co
 
 ## Setup
 
-[vkel](https://github.com/MrVallentin/vkel) doesn't (any more) require the vulkan headers.
-So simply download [vkel.h](https://github.com/MrVallentin/vkel/blob/master/vkel.h) and
-[vkel.c](https://github.com/MrVallentin/vkel/blob/master/vkel.c) and you're done!
+[vkel][vkel] doesn't (any more) require the vulkan headers.
+So simply download [vkel.h][vkel.h] and
+[vkel.c][vkel.c] and you're done!
 *Do note that this takes into account, that the Vulkan library and driver exists on the system.*
 
 ### Unix-like OS
@@ -36,9 +47,9 @@ was using `gcc -std=c99 -fPIC -shared -o libvkel.so vkel.c` when building.*
 
 ## Generating
 
-Overall the only thing needed is [vkel_gen.py](https://github.com/MrVallentin/vkel/blob/master/vkel_gen.py).
+Overall the only thing needed is [vkel_gen.py][vkel_gen.py].
 When executing the script will temporarily download `vulkan.h` and `vk_platform.h`. Though if they already
-exist within the same folder as [vkel_gen.py](https://github.com/MrVallentin/vkel/blob/master/vkel_gen.py),
+exist within the same folder as [vkel_gen.py][vkel_gen.py],
 then it will fallback to using them. Be aware that when new versions of the Vulkan headers are available,
 this can create problems.
 
@@ -147,7 +158,7 @@ int main(int argc, char **argv)
 
 ## Example: List Supported Extensions
 
-[vkel](https://github.com/MrVallentin/vkel) can also be used to list all
+[vkel][vkel] can also be used to list all
 supported extensions and layers using:
 
 - `vkelGetInstanceExtensionNames`
@@ -328,3 +339,9 @@ freely, subject to the following restrictions:
 Vulkan™ and the Vulkan logo are trademarks of the Khronos Group Inc.
 
 ![Vulkan Logo](http://advvulkan.com/Vulkan_500px_Mar15.png)
+
+
+[vkel]: https://github.com/MrVallentin/vkel
+[vkel.h]: https://github.com/MrVallentin/vkel/blob/master/vkel.h
+[vkel.c]: https://github.com/MrVallentin/vkel/blob/master/vkel.c
+[vkel_gen.py]: https://github.com/MrVallentin/vkel/blob/master/vkel_gen.py

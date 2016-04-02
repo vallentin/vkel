@@ -28,11 +28,14 @@ COPYRIGHT = br'''//=============================================================
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: March 26, 2016
-//     Revision: 6
-//     Version: 2.0.3
+//     Last Modified Date: April 03, 2016
+//     Revision: 7
+//     Version: 2.0.4
 //
 // Revision History
+//     Revision 7, 2016/04/03
+//       - Updated support for Vulkan 1.0.7
+//
 //     Revision 6, 2016/03/26
 //       - Updated support for Vulkan 1.0.7
 //
@@ -94,7 +97,6 @@ COPYRIGHT = br'''//=============================================================
 '''
 
 
-
 # Try to import Python 3 library urllib.request
 # and if it fails, fall back to Python 2 urllib2
 try:
@@ -104,7 +106,6 @@ except ImportError:
 
 import os
 import re
-
 
 
 import sys
@@ -124,10 +125,8 @@ if '-k' in argv:
 	keep = True
 
 
-
 vulkan_h = ""
 vk_platform_h = ""
-
 
 
 if not force and os.path.exists("vulkan.h"):
@@ -152,7 +151,6 @@ else:
 			f.write(vulkan_h.encode("utf-8"))
 
 
-
 if not force and os.path.exists("vk_platform.h"):
 	print("Using existing vk_platform.h")
 	
@@ -175,9 +173,7 @@ else:
 			f.write(vk_platform_h.encode("utf-8"))
 
 
-
 print("Parsing vulkan.h and vk_platform.h")
-
 
 
 extension_names = []
@@ -189,7 +185,6 @@ for extension_name in re.findall("#define\s+.*?_EXTENSION_NAME\s+\"VK_(.*?)\"", 
 # This device extension isn't listed in vulkan.h, to just manually add it for now
 if "NV_glsl_shader" not in extension_names:
 	extension_names.append("NV_glsl_shader")
-
 
 
 # Layers aren't defined in vulkan.h (at the point of writing this at least),
@@ -215,7 +210,6 @@ layer_names = [
 ]
 
 
-
 # all the functions no matter which platform
 all_funcs = []
 
@@ -226,7 +220,6 @@ platform_funcs = {
 
 # current platform
 platform = None
-
 
 
 # regex_function = re.compile(r"PFN_(\w+)")
@@ -267,9 +260,7 @@ for line in vulkan_h.splitlines():
 				platform_funcs[platform].append(func)
 
 
-
 print("Processing vulkan.h and vk_platform.h")
-
 
 
 def process_source_code(source):
@@ -300,7 +291,6 @@ def process_source_code(source):
 	return source
 
 
-
 # This works by selecting the longest found multi-line comment,
 # that contains the word "copyright" case-insensitive.
 def get_copyright(source):
@@ -326,7 +316,6 @@ def get_copyright(source):
 	return longest
 
 
-
 vulkan_h_copyright = get_copyright(vulkan_h)
 vk_platform_h_copyright = get_copyright(vulkan_h)
 
@@ -334,7 +323,6 @@ vk_platform_h_copyright = get_copyright(vulkan_h)
 if vulkan_h_copyright == vk_platform_h_copyright:
 	# Then just remove one of them
 	vk_platform_h_copyright = None
-
 
 
 vk_platform_h = process_source_code(vk_platform_h)
@@ -345,9 +333,7 @@ vulkan_h = re.compile(r"^\s*#\s*include\s+\"vk_platform.h\"", re.I | re.M).sub(v
 vulkan_h = process_source_code(vulkan_h)
 
 
-
 print("Generating vkel.h")
-
 
 
 def add_copyright(f):
@@ -358,7 +344,6 @@ def add_copyright(f):
 	
 	if vk_platform_h_copyright:
 		f.write(vk_platform_h_copyright.encode("utf-8"))
-
 
 
 with open("vkel.h", "wb") as f:
@@ -395,7 +380,6 @@ extern "C" {
 #endif
 
 ''')
-	
 	
 	
 	f.write(br'''
@@ -458,7 +442,6 @@ void vkelUninit(void);
 ''')
 	
 	
-	
 	f.write(b"// Instance and device extension names\n")
 	
 	# Are there any (instance or device) extensions? (is array empty)
@@ -470,7 +453,6 @@ void vkelUninit(void);
 	f.write(b"\n")
 	
 	
-	
 	f.write(b"// Instance and device layer names\n")
 	
 	# Are there any (instance or device) layers? (is array empty)
@@ -480,7 +462,6 @@ void vkelUninit(void);
 				f.write("VkBool32 VKEL_{0};\n".format(layer_name).encode("utf-8"))
 	
 	f.write(b"\n\n")
-	
 	
 	
 	lines = []
@@ -531,7 +512,6 @@ void vkelUninit(void);
 	f.write("\n".join(lines).encode("utf-8"))
 	
 	
-	
 	f.write(br'''
 #ifdef __cplusplus
 }
@@ -540,9 +520,7 @@ void vkelUninit(void);
 #endif /* _VKEL_H_ */''')
 
 
-
 print("Generating vkel.c")
-
 
 
 with open("vkel.c", "wb") as f:
@@ -938,7 +916,6 @@ VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const c
 ''')
 	
 	
-	
 	# vkelInit()
 		
 	f.write(br'''
@@ -961,7 +938,6 @@ VkBool32 vkelInit(void)
 ''')
 	
 	
-	
 	lines = []
 	
 	for platform in sorted(platform_funcs):
@@ -977,7 +953,6 @@ VkBool32 vkelInit(void)
 		lines.append("")
 	
 	lines.append("")
-	
 	
 	
 	lines.append("\t// Instance and device extension names")
@@ -1002,9 +977,7 @@ VkBool32 vkelInit(void)
 	lines.append("")
 	
 	
-	
 	f.write("\n".join(lines).encode("utf-8"))
-	
 	
 	
 	f.write(br'''
@@ -1012,7 +985,6 @@ VkBool32 vkelInit(void)
 	return VK_TRUE;
 }
 	''')
-	
 	
 	
 	# vkelInstanceInit()
@@ -1025,7 +997,6 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 	
 	
 ''')
-	
 	
 	
 	lines = []
@@ -1045,7 +1016,6 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 	lines.append("")
 	
 	
-	
 	lines.append("\t// Instance and device extension names")
 	
 	# Are there any (instance or device) extensions? (is array empty)
@@ -1068,9 +1038,7 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 	lines.append("")
 	
 	
-	
 	f.write("\n".join(lines).encode("utf-8"))
-	
 	
 	
 	f.write(br'''
@@ -1078,7 +1046,6 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 	return VK_TRUE;
 }
 	''')
-	
 	
 	
 	# vkelDeviceInit()
@@ -1091,7 +1058,6 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 	
 	
 ''')
-	
 	
 	
 	lines = []
@@ -1109,7 +1075,6 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 		lines.append("")
 	
 	lines.append("")
-	
 	
 	
 	lines.append("\t// Instance and device extension names")
@@ -1134,9 +1099,7 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 	lines.append("")
 	
 	
-	
 	f.write("\n".join(lines).encode("utf-8"))
-	
 	
 	
 	f.write(br'''
@@ -1144,7 +1107,6 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 	return VK_TRUE;
 }
 	''')
-	
 	
 	
 	f.write(br'''
@@ -1161,12 +1123,10 @@ void vkelUninit(void)
 	f.write(b"\n")
 	
 	
-	
 	f.write(br'''
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */''')
-
 
 
 print("Done")

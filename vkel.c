@@ -23,11 +23,14 @@
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: March 26, 2016
-//     Revision: 6
-//     Version: 2.0.3
+//     Last Modified Date: April 03, 2016
+//     Revision: 7
+//     Version: 2.0.4
 //
 // Revision History
+//     Revision 7, 2016/04/03
+//       - Updated support for Vulkan 1.0.7
+//
 //     Revision 6, 2016/03/26
 //       - Updated support for Vulkan 1.0.7
 //

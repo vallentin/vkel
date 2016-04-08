@@ -23,13 +23,16 @@
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: April 03, 2016
-//     Revision: 7
-//     Version: 2.0.4
+//     Last Modified Date: April 06, 2016
+//     Revision: 8
+//     Version: 2.0.5
 //
 // Revision History
+//     Revision 8, 2016/04/08
+//       - Updated support for Vulkan 1.0.9
+//
 //     Revision 7, 2016/04/03
-//       - Updated support for Vulkan 1.0.7
+//       - Updated support for Vulkan 1.0.8
 //
 //     Revision 6, 2016/03/26
 //       - Updated support for Vulkan 1.0.7
@@ -233,7 +236,7 @@ extern "C" {
 #define VK_VERSION_MAJOR(version) ((uint32_t)(version) >> 22)
 #define VK_VERSION_MINOR(version) (((uint32_t)(version) >> 12) & 0x3ff)
 #define VK_VERSION_PATCH(version) ((uint32_t)(version) & 0xfff)
-#define VK_HEADER_VERSION 8
+#define VK_HEADER_VERSION 9
 
 #define VK_NULL_HANDLE 0
 

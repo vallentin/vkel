@@ -1,6 +1,9 @@
 
 # vkel - Changelog
 
+## 2.0.5 - Revision 8, 2016/04/08
+- Updated support for Vulkan 1.0.9
+
 ## 2.0.4 - Revision 7, 2016/04/03
 - Updated support for Vulkan 1.0.8
 

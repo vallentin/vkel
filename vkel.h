@@ -24,10 +24,13 @@
 //
 // Version History
 //     Last Modified Date: April 06, 2016
-//     Revision: 8
-//     Version: 2.0.5
+//     Revision: 9
+//     Version: 2.0.6
 //
 // Revision History
+//     Revision 9, 2016/04/18
+//       - Updated support for Vulkan 1.0.10
+//
 //     Revision 8, 2016/04/08
 //       - Updated support for Vulkan 1.0.9
 //
@@ -236,7 +239,7 @@ extern "C" {
 #define VK_VERSION_MAJOR(version) ((uint32_t)(version) >> 22)
 #define VK_VERSION_MINOR(version) (((uint32_t)(version) >> 12) & 0x3ff)
 #define VK_VERSION_PATCH(version) ((uint32_t)(version) & 0xfff)
-#define VK_HEADER_VERSION 9
+#define VK_HEADER_VERSION 10
 
 #define VK_NULL_HANDLE 0
 

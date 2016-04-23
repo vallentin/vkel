@@ -28,11 +28,14 @@ COPYRIGHT = br'''//=============================================================
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: April 06, 2016
-//     Revision: 9
-//     Version: 2.0.6
+//     Last Modified Date: April 22, 2016
+//     Revision: 10
+//     Version: 2.0.7
 //
 // Revision History
+//     Revision 9, 2016/04/22
+//       - Updated support for Vulkan 1.0.11
+//
 //     Revision 9, 2016/04/18
 //       - Updated support for Vulkan 1.0.10
 //

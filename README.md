@@ -2,17 +2,19 @@
 
 *Simple Dynamic Cross-Platform Vulkan Extension Loader*
 
-*Updated for [Vulkan 1.0.9](https://www.khronos.org/registry/vulkan/#apispecs).*
+*Updated for [Vulkan 1.0.11](https://www.khronos.org/registry/vulkan/#apispecs).*
 
 
 #### Vulkan Documentation
 
-- [Vulkan 1.0.9 Specification](https://www.khronos.org/registry/vulkan/specs/1.0/xhtml/vkspec.html)
-- [Vulkan 1.0.9 + WSI Extension Specification](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/xhtml/vkspec.html)
+- [Vulkan 1.0.11 Specification](https://www.khronos.org/registry/vulkan/specs/1.0/xhtml/vkspec.html)
+- [Vulkan 1.0.11 + WSI Extension Specification](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/xhtml/vkspec.html)
 
 
 #### Specification Updates
 
+- [Vulkan 1.0.11 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/ce3204c7dd53a0116ce3a91fd12919d606c306f5)
+- [Vulkan 1.0.10 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/3b32b240f6a71aba8e8b746aaab8bba45883de77)
 - [Vulkan 1.0.9 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5d10fc3089ba0ec6a4c7d757a4b18a9ef215d2fb)
 - [Vulkan 1.0.8 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/ce3204c7dd53a0116ce3a91fd12919d606c306f5)
 - [Vulkan 1.0.7 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/8c3c9b4c85f2539b67148c2de9e2573154c92786)

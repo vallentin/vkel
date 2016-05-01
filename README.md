@@ -7,6 +7,7 @@
 
 #### Vulkan Documentation
 
+- [Vulkan 1.0 API References](https://www.khronos.org/registry/vulkan/specs/1.0/apispec.html)
 - [Vulkan 1.0.12 Specification](https://www.khronos.org/registry/vulkan/specs/1.0/xhtml/vkspec.html)
 - [Vulkan 1.0.12 + WSI Extension Specification](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/xhtml/vkspec.html)
 

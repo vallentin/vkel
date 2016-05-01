@@ -23,12 +23,15 @@
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: April 22, 2016
-//     Revision: 10
-//     Version: 2.0.7
+//     Last Modified Date: May 01, 2016
+//     Revision: 11
+//     Version: 2.0.8
 //
 // Revision History
-//     Revision 9, 2016/04/22
+//     Revision 11, 2016/05/01
+//       - Updated support for Vulkan 1.0.12
+//
+//     Revision 10, 2016/04/22
 //       - Updated support for Vulkan 1.0.11
 //
 //     Revision 9, 2016/04/18
@@ -711,6 +714,7 @@ VkBool32 vkelInit(void)
 
 
 	// Instance and device extension names
+	VKEL_AMD_rasterization_order = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_rasterization_order");
 	VKEL_EXT_debug_report = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_filter_cubic");
 	VKEL_KHR_android_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_android_surface");
@@ -947,6 +951,7 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 
 
 	// Instance and device extension names
+	VKEL_AMD_rasterization_order = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_rasterization_order");
 	VKEL_EXT_debug_report = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_filter_cubic");
 	VKEL_KHR_android_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_android_surface");
@@ -1183,6 +1188,7 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 
 
 	// Instance and device extension names
+	VKEL_AMD_rasterization_order = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_AMD_rasterization_order");
 	VKEL_EXT_debug_report = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_IMG_filter_cubic");
 	VKEL_KHR_android_surface = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_android_surface");

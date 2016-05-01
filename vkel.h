@@ -23,12 +23,15 @@
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: April 22, 2016
-//     Revision: 10
-//     Version: 2.0.7
+//     Last Modified Date: May 01, 2016
+//     Revision: 11
+//     Version: 2.0.8
 //
 // Revision History
-//     Revision 9, 2016/04/22
+//     Revision 11, 2016/05/01
+//       - Updated support for Vulkan 1.0.12
+//
+//     Revision 10, 2016/04/22
 //       - Updated support for Vulkan 1.0.11
 //
 //     Revision 9, 2016/04/18
@@ -235,7 +238,7 @@ extern "C" {
 #define VK_VERSION_MAJOR(version) ((uint32_t)(version) >> 22)
 #define VK_VERSION_MINOR(version) (((uint32_t)(version) >> 12) & 0x3ff)
 #define VK_VERSION_PATCH(version) ((uint32_t)(version) & 0xfff)
-#define VK_HEADER_VERSION 11
+#define VK_HEADER_VERSION 12
 
 #define VK_NULL_HANDLE 0
 
@@ -395,6 +398,7 @@ typedef enum VkStructureType {
     VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR = 1000008000,
     VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR = 1000009000,
     VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000,
+    VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD = 1000018000,
     VK_STRUCTURE_TYPE_BEGIN_RANGE = VK_STRUCTURE_TYPE_APPLICATION_INFO,
     VK_STRUCTURE_TYPE_END_RANGE = VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO,
     VK_STRUCTURE_TYPE_RANGE_SIZE = (VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO - VK_STRUCTURE_TYPE_APPLICATION_INFO + 1),
@@ -2989,6 +2993,25 @@ typedef void (VKAPI_PTR *PFN_vkDebugReportMessageEXT)(VkInstance instance, VkDeb
 #define VK_IMG_FILTER_CUBIC_SPEC_VERSION  1
 #define VK_IMG_FILTER_CUBIC_EXTENSION_NAME "VK_IMG_filter_cubic"
 
+#define VK_AMD_rasterization_order 1
+#define VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION 1
+#define VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME "VK_AMD_rasterization_order"
+
+typedef enum VkRasterizationOrderAMD {
+    VK_RASTERIZATION_ORDER_STRICT_AMD = 0,
+    VK_RASTERIZATION_ORDER_RELAXED_AMD = 1,
+    VK_RASTERIZATION_ORDER_BEGIN_RANGE_AMD = VK_RASTERIZATION_ORDER_STRICT_AMD,
+    VK_RASTERIZATION_ORDER_END_RANGE_AMD = VK_RASTERIZATION_ORDER_RELAXED_AMD,
+    VK_RASTERIZATION_ORDER_RANGE_SIZE_AMD = (VK_RASTERIZATION_ORDER_RELAXED_AMD - VK_RASTERIZATION_ORDER_STRICT_AMD + 1),
+    VK_RASTERIZATION_ORDER_MAX_ENUM_AMD = 0x7FFFFFFF
+} VkRasterizationOrderAMD;
+
+typedef struct VkPipelineRasterizationStateRasterizationOrderAMD {
+    VkStructureType            sType;
+    const void*                pNext;
+    VkRasterizationOrderAMD    rasterizationOrder;
+} VkPipelineRasterizationStateRasterizationOrderAMD;
+
 #endif
 
 
@@ -3030,6 +3053,7 @@ void vkelUninit(void);
 
 
 // Instance and device extension names
+VkBool32 VKEL_AMD_rasterization_order;
 VkBool32 VKEL_EXT_debug_report;
 VkBool32 VKEL_IMG_filter_cubic;
 VkBool32 VKEL_KHR_android_surface;

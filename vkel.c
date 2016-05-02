@@ -23,11 +23,15 @@
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: May 01, 2016
-//     Revision: 11
-//     Version: 2.0.8
+//     Last Modified Date: May 02, 2016
+//     Revision: 12
+//     Version: 2.0.9
 //
 // Revision History
+//     Revision 12, 2016/05/02
+//       - Fixed "for loop initial declarations are only
+//         allowed in C99 mode".
+//
 //     Revision 11, 2016/05/01
 //       - Updated support for Vulkan 1.0.12
 //
@@ -217,8 +221,9 @@ void vkelDeleteNames(uint32_t nameCount, char **names)
 	// assert(names);
 	if (!names)
 		return;
-
-	for (uint32_t nameIndex = 0; nameIndex < nameCount; nameIndex++)
+	
+	uint32_t nameIndex = 0;
+	for (nameIndex = 0; nameIndex < nameCount; nameIndex++)
 	{
 		// assert(names[nameIndex]);
 		if (!names[nameIndex])
@@ -250,8 +255,9 @@ char** vkelGetInstanceExtensionNames(const char *pLayerName, uint32_t *extension
 
 
 	char **extensionNames = (char**) calloc(extPropertyCount, sizeof(char*));
-
-	for (uint32_t extensionNameIndex = 0; extensionNameIndex < extPropertyCount; extensionNameIndex++)
+	
+	uint32_t extensionNameIndex = 0;
+	for (extensionNameIndex = 0; extensionNameIndex < extPropertyCount; extensionNameIndex++)
 	{
 		extensionNames[extensionNameIndex] = (char*)calloc(VK_MAX_EXTENSION_NAME_SIZE, sizeof(char));
 	}
@@ -263,8 +269,9 @@ char** vkelGetInstanceExtensionNames(const char *pLayerName, uint32_t *extension
 
 	err = vkEnumerateInstanceExtensionProperties(pLayerName, &extPropertyCount, extProperties);
 	assert(!err);
-
-	for (uint32_t extPropertyIndex = 0; extPropertyIndex < extPropertyCount; extPropertyIndex++)
+	
+	uint32_t extPropertyIndex = 0;
+	for (extPropertyIndex = 0; extPropertyIndex < extPropertyCount; extPropertyIndex++)
 	{
 		VkExtensionProperties extProperty = extProperties[extPropertyIndex];
 
@@ -297,8 +304,9 @@ char** vkelGetInstanceLayerNames(uint32_t *layerNameCount)
 
 
 	char **layerNames = (char**) calloc(layerPropertyCount, sizeof(char*));
-
-	for (uint32_t layerNameIndex = 0; layerNameIndex < layerPropertyCount; layerNameIndex++)
+	
+	uint32_t layerNameIndex = 0;
+	for (layerNameIndex = 0; layerNameIndex < layerPropertyCount; layerNameIndex++)
 	{
 		layerNames[layerNameIndex] = (char*) calloc(VK_MAX_EXTENSION_NAME_SIZE, sizeof(char));
 	}
@@ -309,8 +317,9 @@ char** vkelGetInstanceLayerNames(uint32_t *layerNameCount)
 
 	err = vkEnumerateInstanceLayerProperties(&layerPropertyCount, layerProperties);
 	assert(!err);
-
-	for (uint32_t layerPropertyIndex = 0; layerPropertyIndex < layerPropertyCount; layerPropertyIndex++)
+	
+	uint32_t layerPropertyIndex = 0;
+	for (layerPropertyIndex = 0; layerPropertyIndex < layerPropertyCount; layerPropertyIndex++)
 	{
 		VkLayerProperties layerProperty = layerProperties[layerPropertyIndex];
 
@@ -344,8 +353,9 @@ char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *
 
 
 	char **extensionNames = (char**) calloc(extPropertyCount, sizeof(char*));
-
-	for (uint32_t extensionNameIndex = 0; extensionNameIndex < extPropertyCount; extensionNameIndex++)
+	
+	uint32_t extensionNameIndex = 0;
+	for (extensionNameIndex = 0; extensionNameIndex < extPropertyCount; extensionNameIndex++)
 	{
 		extensionNames[extensionNameIndex] = (char*) calloc(VK_MAX_EXTENSION_NAME_SIZE, sizeof(char));
 	}
@@ -357,8 +367,9 @@ char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *
 
 	err = vkEnumerateDeviceExtensionProperties(physicalDevice, pLayerName, &extPropertyCount, extProperties);
 	assert(!err);
-
-	for (uint32_t extPropertyIndex = 0; extPropertyIndex < extPropertyCount; extPropertyIndex++)
+	
+	uint32_t extPropertyIndex = 0;
+	for (extPropertyIndex = 0; extPropertyIndex < extPropertyCount; extPropertyIndex++)
 	{
 		VkExtensionProperties extProperty = extProperties[extPropertyIndex];
 
@@ -391,8 +402,9 @@ char** vkelGetDeviceLayerNames(VkPhysicalDevice physicalDevice, uint32_t *layerN
 
 
 	char **layerNames = (char**) calloc(layerPropertyCount, sizeof(char*));
-
-	for (uint32_t layerNameIndex = 0; layerNameIndex < layerPropertyCount; layerNameIndex++)
+	
+	uint32_t layerNameIndex = 0;
+	for (layerNameIndex = 0; layerNameIndex < layerPropertyCount; layerNameIndex++)
 	{
 		layerNames[layerNameIndex] = (char*) calloc(VK_MAX_EXTENSION_NAME_SIZE, sizeof(char));
 	}
@@ -403,8 +415,9 @@ char** vkelGetDeviceLayerNames(VkPhysicalDevice physicalDevice, uint32_t *layerN
 
 	err = vkEnumerateDeviceLayerProperties(physicalDevice, &layerPropertyCount, layerProperties);
 	assert(!err);
-
-	for (uint32_t layerPropertyIndex = 0; layerPropertyIndex < layerPropertyCount; layerPropertyIndex++)
+	
+	uint32_t layerPropertyIndex = 0;
+	for (layerPropertyIndex = 0; layerPropertyIndex < layerPropertyCount; layerPropertyIndex++)
 	{
 		VkLayerProperties layerProperty = layerProperties[layerPropertyIndex];
 
@@ -423,8 +436,9 @@ VkBool32 vkelIsInstanceLayerSupported(const char *pLayerName)
 {
 	uint32_t layerNameCount = 0;
 	char **layerNames = vkelGetInstanceLayerNames(&layerNameCount);
-
-	for (uint32_t layerNameIndex = 0; layerNameIndex < layerNameCount; layerNameIndex++)
+	
+	uint32_t layerNameIndex = 0;
+	for (layerNameIndex = 0; layerNameIndex < layerNameCount; layerNameIndex++)
 	{
 		if (vkel_strcmp(layerNames[layerNameIndex], pLayerName))
 		{
@@ -443,8 +457,9 @@ VkBool32 vkelIsInstanceExtensionSupported(const char *pLayerName, const char *pE
 {
 	uint32_t extensionNameCount = 0;
 	char **extensionNames = vkelGetInstanceExtensionNames(pLayerName, &extensionNameCount);
-
-	for (uint32_t extensionNameIndex = 0; extensionNameIndex < extensionNameCount; extensionNameIndex++)
+	
+	uint32_t extensionNameIndex = 0;
+	for (extensionNameIndex = 0; extensionNameIndex < extensionNameCount; extensionNameIndex++)
 	{
 		if (vkel_strcmp(extensionNames[extensionNameIndex], pExtensionName))
 		{
@@ -464,8 +479,9 @@ VkBool32 vkelIsDeviceLayerSupported(VkPhysicalDevice physicalDevice, const char 
 {
 	uint32_t layerNameCount = 0;
 	char **layerNames = vkelGetDeviceLayerNames(physicalDevice, &layerNameCount);
-
-	for (uint32_t layerNameIndex = 0; layerNameIndex < layerNameCount; layerNameIndex++)
+	
+	uint32_t layerNameIndex = 0;
+	for (layerNameIndex = 0; layerNameIndex < layerNameCount; layerNameIndex++)
 	{
 		if (vkel_strcmp(layerNames[layerNameIndex], pLayerName))
 		{
@@ -484,8 +500,9 @@ VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const c
 {
 	uint32_t extensionNameCount = 0;
 	char **extensionNames = vkelGetDeviceExtensionNames(physicalDevice, pLayerName, &extensionNameCount);
-
-	for (uint32_t extensionNameIndex = 0; extensionNameIndex < extensionNameCount; extensionNameIndex++)
+	
+	uint32_t extensionNameIndex = 0;
+	for (extensionNameIndex = 0; extensionNameIndex < extensionNameCount; extensionNameIndex++)
 	{
 		if (vkel_strcmp(extensionNames[extensionNameIndex], pExtensionName))
 		{

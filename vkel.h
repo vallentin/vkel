@@ -23,11 +23,15 @@
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: May 01, 2016
-//     Revision: 11
-//     Version: 2.0.8
+//     Last Modified Date: May 02, 2016
+//     Revision: 12
+//     Version: 2.0.9
 //
 // Revision History
+//     Revision 12, 2016/05/02
+//       - Fixed "for loop initial declarations are only
+//         allowed in C99 mode".
+//
 //     Revision 11, 2016/05/01
 //       - Updated support for Vulkan 1.0.12
 //

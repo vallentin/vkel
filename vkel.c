@@ -557,6 +557,9 @@ VkBool32 vkelInit(void)
 	__vkCmdCopyImage = (PFN_vkCmdCopyImage) vkelGetProcAddr("vkCmdCopyImage");
 	__vkCmdCopyImageToBuffer = (PFN_vkCmdCopyImageToBuffer) vkelGetProcAddr("vkCmdCopyImageToBuffer");
 	__vkCmdCopyQueryPoolResults = (PFN_vkCmdCopyQueryPoolResults) vkelGetProcAddr("vkCmdCopyQueryPoolResults");
+	__vkCmdDebugMarkerBeginEXT = (PFN_vkCmdDebugMarkerBeginEXT) vkelGetProcAddr("vkCmdDebugMarkerBeginEXT");
+	__vkCmdDebugMarkerEndEXT = (PFN_vkCmdDebugMarkerEndEXT) vkelGetProcAddr("vkCmdDebugMarkerEndEXT");
+	__vkCmdDebugMarkerInsertEXT = (PFN_vkCmdDebugMarkerInsertEXT) vkelGetProcAddr("vkCmdDebugMarkerInsertEXT");
 	__vkCmdDispatch = (PFN_vkCmdDispatch) vkelGetProcAddr("vkCmdDispatch");
 	__vkCmdDispatchIndirect = (PFN_vkCmdDispatchIndirect) vkelGetProcAddr("vkCmdDispatchIndirect");
 	__vkCmdDraw = (PFN_vkCmdDraw) vkelGetProcAddr("vkCmdDraw");
@@ -612,6 +615,8 @@ VkBool32 vkelInit(void)
 	__vkCreateShaderModule = (PFN_vkCreateShaderModule) vkelGetProcAddr("vkCreateShaderModule");
 	__vkCreateSharedSwapchainsKHR = (PFN_vkCreateSharedSwapchainsKHR) vkelGetProcAddr("vkCreateSharedSwapchainsKHR");
 	__vkCreateSwapchainKHR = (PFN_vkCreateSwapchainKHR) vkelGetProcAddr("vkCreateSwapchainKHR");
+	__vkDebugMarkerSetObjectNameEXT = (PFN_vkDebugMarkerSetObjectNameEXT) vkelGetProcAddr("vkDebugMarkerSetObjectNameEXT");
+	__vkDebugMarkerSetObjectTagEXT = (PFN_vkDebugMarkerSetObjectTagEXT) vkelGetProcAddr("vkDebugMarkerSetObjectTagEXT");
 	__vkDebugReportCallbackEXT = (PFN_vkDebugReportCallbackEXT) vkelGetProcAddr("vkDebugReportCallbackEXT");
 	__vkDebugReportMessageEXT = (PFN_vkDebugReportMessageEXT) vkelGetProcAddr("vkDebugReportMessageEXT");
 	__vkDestroyBuffer = (PFN_vkDestroyBuffer) vkelGetProcAddr("vkDestroyBuffer");
@@ -732,6 +737,7 @@ VkBool32 vkelInit(void)
 
 	// Instance and device extension names
 	VKEL_AMD_rasterization_order = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_rasterization_order");
+	VKEL_EXT_debug_marker = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_marker");
 	VKEL_EXT_debug_report = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_filter_cubic");
 	VKEL_KHR_android_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_android_surface");
@@ -794,6 +800,9 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 	__vkCmdCopyImage = (PFN_vkCmdCopyImage) vkelGetInstanceProcAddr(instance, "vkCmdCopyImage");
 	__vkCmdCopyImageToBuffer = (PFN_vkCmdCopyImageToBuffer) vkelGetInstanceProcAddr(instance, "vkCmdCopyImageToBuffer");
 	__vkCmdCopyQueryPoolResults = (PFN_vkCmdCopyQueryPoolResults) vkelGetInstanceProcAddr(instance, "vkCmdCopyQueryPoolResults");
+	__vkCmdDebugMarkerBeginEXT = (PFN_vkCmdDebugMarkerBeginEXT) vkelGetInstanceProcAddr(instance, "vkCmdDebugMarkerBeginEXT");
+	__vkCmdDebugMarkerEndEXT = (PFN_vkCmdDebugMarkerEndEXT) vkelGetInstanceProcAddr(instance, "vkCmdDebugMarkerEndEXT");
+	__vkCmdDebugMarkerInsertEXT = (PFN_vkCmdDebugMarkerInsertEXT) vkelGetInstanceProcAddr(instance, "vkCmdDebugMarkerInsertEXT");
 	__vkCmdDispatch = (PFN_vkCmdDispatch) vkelGetInstanceProcAddr(instance, "vkCmdDispatch");
 	__vkCmdDispatchIndirect = (PFN_vkCmdDispatchIndirect) vkelGetInstanceProcAddr(instance, "vkCmdDispatchIndirect");
 	__vkCmdDraw = (PFN_vkCmdDraw) vkelGetInstanceProcAddr(instance, "vkCmdDraw");
@@ -849,6 +858,8 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 	__vkCreateShaderModule = (PFN_vkCreateShaderModule) vkelGetInstanceProcAddr(instance, "vkCreateShaderModule");
 	__vkCreateSharedSwapchainsKHR = (PFN_vkCreateSharedSwapchainsKHR) vkelGetInstanceProcAddr(instance, "vkCreateSharedSwapchainsKHR");
 	__vkCreateSwapchainKHR = (PFN_vkCreateSwapchainKHR) vkelGetInstanceProcAddr(instance, "vkCreateSwapchainKHR");
+	__vkDebugMarkerSetObjectNameEXT = (PFN_vkDebugMarkerSetObjectNameEXT) vkelGetInstanceProcAddr(instance, "vkDebugMarkerSetObjectNameEXT");
+	__vkDebugMarkerSetObjectTagEXT = (PFN_vkDebugMarkerSetObjectTagEXT) vkelGetInstanceProcAddr(instance, "vkDebugMarkerSetObjectTagEXT");
 	__vkDebugReportCallbackEXT = (PFN_vkDebugReportCallbackEXT) vkelGetInstanceProcAddr(instance, "vkDebugReportCallbackEXT");
 	__vkDebugReportMessageEXT = (PFN_vkDebugReportMessageEXT) vkelGetInstanceProcAddr(instance, "vkDebugReportMessageEXT");
 	__vkDestroyBuffer = (PFN_vkDestroyBuffer) vkelGetInstanceProcAddr(instance, "vkDestroyBuffer");
@@ -969,6 +980,7 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 
 	// Instance and device extension names
 	VKEL_AMD_rasterization_order = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_rasterization_order");
+	VKEL_EXT_debug_marker = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_marker");
 	VKEL_EXT_debug_report = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_filter_cubic");
 	VKEL_KHR_android_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_android_surface");
@@ -1031,6 +1043,9 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 	__vkCmdCopyImage = (PFN_vkCmdCopyImage) vkelGetDeviceProcAddr(device, "vkCmdCopyImage");
 	__vkCmdCopyImageToBuffer = (PFN_vkCmdCopyImageToBuffer) vkelGetDeviceProcAddr(device, "vkCmdCopyImageToBuffer");
 	__vkCmdCopyQueryPoolResults = (PFN_vkCmdCopyQueryPoolResults) vkelGetDeviceProcAddr(device, "vkCmdCopyQueryPoolResults");
+	__vkCmdDebugMarkerBeginEXT = (PFN_vkCmdDebugMarkerBeginEXT) vkelGetDeviceProcAddr(device, "vkCmdDebugMarkerBeginEXT");
+	__vkCmdDebugMarkerEndEXT = (PFN_vkCmdDebugMarkerEndEXT) vkelGetDeviceProcAddr(device, "vkCmdDebugMarkerEndEXT");
+	__vkCmdDebugMarkerInsertEXT = (PFN_vkCmdDebugMarkerInsertEXT) vkelGetDeviceProcAddr(device, "vkCmdDebugMarkerInsertEXT");
 	__vkCmdDispatch = (PFN_vkCmdDispatch) vkelGetDeviceProcAddr(device, "vkCmdDispatch");
 	__vkCmdDispatchIndirect = (PFN_vkCmdDispatchIndirect) vkelGetDeviceProcAddr(device, "vkCmdDispatchIndirect");
 	__vkCmdDraw = (PFN_vkCmdDraw) vkelGetDeviceProcAddr(device, "vkCmdDraw");
@@ -1086,6 +1101,8 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 	__vkCreateShaderModule = (PFN_vkCreateShaderModule) vkelGetDeviceProcAddr(device, "vkCreateShaderModule");
 	__vkCreateSharedSwapchainsKHR = (PFN_vkCreateSharedSwapchainsKHR) vkelGetDeviceProcAddr(device, "vkCreateSharedSwapchainsKHR");
 	__vkCreateSwapchainKHR = (PFN_vkCreateSwapchainKHR) vkelGetDeviceProcAddr(device, "vkCreateSwapchainKHR");
+	__vkDebugMarkerSetObjectNameEXT = (PFN_vkDebugMarkerSetObjectNameEXT) vkelGetDeviceProcAddr(device, "vkDebugMarkerSetObjectNameEXT");
+	__vkDebugMarkerSetObjectTagEXT = (PFN_vkDebugMarkerSetObjectTagEXT) vkelGetDeviceProcAddr(device, "vkDebugMarkerSetObjectTagEXT");
 	__vkDebugReportCallbackEXT = (PFN_vkDebugReportCallbackEXT) vkelGetDeviceProcAddr(device, "vkDebugReportCallbackEXT");
 	__vkDebugReportMessageEXT = (PFN_vkDebugReportMessageEXT) vkelGetDeviceProcAddr(device, "vkDebugReportMessageEXT");
 	__vkDestroyBuffer = (PFN_vkDestroyBuffer) vkelGetDeviceProcAddr(device, "vkDestroyBuffer");
@@ -1206,6 +1223,7 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 
 	// Instance and device extension names
 	VKEL_AMD_rasterization_order = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_AMD_rasterization_order");
+	VKEL_EXT_debug_marker = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_EXT_debug_marker");
 	VKEL_EXT_debug_report = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_IMG_filter_cubic");
 	VKEL_KHR_android_surface = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_android_surface");

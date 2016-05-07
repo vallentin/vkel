@@ -403,6 +403,9 @@ typedef enum VkStructureType {
     VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR = 1000009000,
     VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000,
     VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD = 1000018000,
+    VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT = 1000022000,
+    VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT = 1000022001,
+    VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT = 1000022002,
     VK_STRUCTURE_TYPE_BEGIN_RANGE = VK_STRUCTURE_TYPE_APPLICATION_INFO,
     VK_STRUCTURE_TYPE_END_RANGE = VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO,
     VK_STRUCTURE_TYPE_RANGE_SIZE = (VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO - VK_STRUCTURE_TYPE_APPLICATION_INFO + 1),
@@ -3016,6 +3019,41 @@ typedef struct VkPipelineRasterizationStateRasterizationOrderAMD {
     VkRasterizationOrderAMD    rasterizationOrder;
 } VkPipelineRasterizationStateRasterizationOrderAMD;
 
+#define VK_EXT_debug_marker 1
+#define VK_EXT_DEBUG_MARKER_SPEC_VERSION  3
+#define VK_EXT_DEBUG_MARKER_EXTENSION_NAME "VK_EXT_debug_marker"
+
+typedef struct VkDebugMarkerObjectNameInfoEXT {
+    VkStructureType               sType;
+    const void*                   pNext;
+    VkDebugReportObjectTypeEXT    objectType;
+    uint64_t                      object;
+    const char*                   pObjectName;
+} VkDebugMarkerObjectNameInfoEXT;
+
+typedef struct VkDebugMarkerObjectTagInfoEXT {
+    VkStructureType               sType;
+    const void*                   pNext;
+    VkDebugReportObjectTypeEXT    objectType;
+    uint64_t                      object;
+    uint64_t                      tagName;
+    size_t                        tagSize;
+    const void*                   pTag;
+} VkDebugMarkerObjectTagInfoEXT;
+
+typedef struct VkDebugMarkerMarkerInfoEXT {
+    VkStructureType    sType;
+    const void*        pNext;
+    const char*        pMarkerName;
+    float              color[4];
+} VkDebugMarkerMarkerInfoEXT;
+
+typedef VkResult (VKAPI_PTR *PFN_vkDebugMarkerSetObjectTagEXT)(VkDevice device, VkDebugMarkerObjectTagInfoEXT* pTagInfo);
+typedef VkResult (VKAPI_PTR *PFN_vkDebugMarkerSetObjectNameEXT)(VkDevice device, VkDebugMarkerObjectNameInfoEXT* pNameInfo);
+typedef void (VKAPI_PTR *PFN_vkCmdDebugMarkerBeginEXT)(VkCommandBuffer commandBuffer, VkDebugMarkerMarkerInfoEXT* pMarkerInfo);
+typedef void (VKAPI_PTR *PFN_vkCmdDebugMarkerEndEXT)(VkCommandBuffer commandBuffer);
+typedef void (VKAPI_PTR *PFN_vkCmdDebugMarkerInsertEXT)(VkCommandBuffer commandBuffer, VkDebugMarkerMarkerInfoEXT* pMarkerInfo);
+
 #endif
 
 
@@ -3058,6 +3096,7 @@ void vkelUninit(void);
 
 // Instance and device extension names
 VkBool32 VKEL_AMD_rasterization_order;
+VkBool32 VKEL_EXT_debug_marker;
 VkBool32 VKEL_EXT_debug_report;
 VkBool32 VKEL_IMG_filter_cubic;
 VkBool32 VKEL_KHR_android_surface;
@@ -3111,6 +3150,9 @@ PFN_vkCmdCopyBufferToImage __vkCmdCopyBufferToImage;
 PFN_vkCmdCopyImage __vkCmdCopyImage;
 PFN_vkCmdCopyImageToBuffer __vkCmdCopyImageToBuffer;
 PFN_vkCmdCopyQueryPoolResults __vkCmdCopyQueryPoolResults;
+PFN_vkCmdDebugMarkerBeginEXT __vkCmdDebugMarkerBeginEXT;
+PFN_vkCmdDebugMarkerEndEXT __vkCmdDebugMarkerEndEXT;
+PFN_vkCmdDebugMarkerInsertEXT __vkCmdDebugMarkerInsertEXT;
 PFN_vkCmdDispatch __vkCmdDispatch;
 PFN_vkCmdDispatchIndirect __vkCmdDispatchIndirect;
 PFN_vkCmdDraw __vkCmdDraw;
@@ -3166,6 +3208,8 @@ PFN_vkCreateSemaphore __vkCreateSemaphore;
 PFN_vkCreateShaderModule __vkCreateShaderModule;
 PFN_vkCreateSharedSwapchainsKHR __vkCreateSharedSwapchainsKHR;
 PFN_vkCreateSwapchainKHR __vkCreateSwapchainKHR;
+PFN_vkDebugMarkerSetObjectNameEXT __vkDebugMarkerSetObjectNameEXT;
+PFN_vkDebugMarkerSetObjectTagEXT __vkDebugMarkerSetObjectTagEXT;
 PFN_vkDebugReportCallbackEXT __vkDebugReportCallbackEXT;
 PFN_vkDebugReportMessageEXT __vkDebugReportMessageEXT;
 PFN_vkDestroyBuffer __vkDestroyBuffer;
@@ -3306,6 +3350,9 @@ PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPrese
 #define vkCmdCopyImage __vkCmdCopyImage
 #define vkCmdCopyImageToBuffer __vkCmdCopyImageToBuffer
 #define vkCmdCopyQueryPoolResults __vkCmdCopyQueryPoolResults
+#define vkCmdDebugMarkerBeginEXT __vkCmdDebugMarkerBeginEXT
+#define vkCmdDebugMarkerEndEXT __vkCmdDebugMarkerEndEXT
+#define vkCmdDebugMarkerInsertEXT __vkCmdDebugMarkerInsertEXT
 #define vkCmdDispatch __vkCmdDispatch
 #define vkCmdDispatchIndirect __vkCmdDispatchIndirect
 #define vkCmdDraw __vkCmdDraw
@@ -3361,6 +3408,8 @@ PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPrese
 #define vkCreateShaderModule __vkCreateShaderModule
 #define vkCreateSharedSwapchainsKHR __vkCreateSharedSwapchainsKHR
 #define vkCreateSwapchainKHR __vkCreateSwapchainKHR
+#define vkDebugMarkerSetObjectNameEXT __vkDebugMarkerSetObjectNameEXT
+#define vkDebugMarkerSetObjectTagEXT __vkDebugMarkerSetObjectTagEXT
 #define vkDebugReportCallbackEXT __vkDebugReportCallbackEXT
 #define vkDebugReportMessageEXT __vkDebugReportMessageEXT
 #define vkDestroyBuffer __vkDestroyBuffer

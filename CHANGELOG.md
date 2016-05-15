@@ -1,6 +1,9 @@
 
 # vkel - Changelog
 
+## 2.0.10 - Revision 11, 2016/05/12
+- Updated support for Vulkan 1.0.13
+
 ## 2.0.9 - Revision 12, 2016/05/02
 - Fixed "for loop initial declarations are only allowed in C99 mode".
 

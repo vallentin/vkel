@@ -12,12 +12,20 @@
 
 - [Vulkan 1.0 API References](https://www.khronos.org/registry/vulkan/specs/1.0/apispec.html)
 [[PDF](https://www.khronos.org/registry/vulkan/specs/1.0/apispec.pdf)]
-- [Vulkan 1.0.12 Specification](https://www.khronos.org/registry/vulkan/specs/1.0/xhtml/vkspec.html)
-- [Vulkan 1.0.12 + WSI Extension Specification](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/xhtml/vkspec.html)
+- [Vulkan 1.0.X Specification](https://www.khronos.org/registry/vulkan/specs/1.0/xhtml/vkspec.html)
+[[PDF](https://www.khronos.org/registry/vulkan/specs/1.0/pdf/vkspec.pdf)]
+- [Vulkan 1.0.X + WSI Extension Specification](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/xhtml/vkspec.html)
+[[PDF](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/pdf/vkspec.pdf)]
+
+- [Vulkan 1.0 Quick Reference [PDF]](https://www.khronos.org/registry/vulkan/specs/1.0/refguide/Vulkan-1.0-web.pdf)
+
+- [The Khronos Vulkan API Registry for Vulkan [PDF]](https://www.khronos.org/registry/vulkan/specs/1.0/readme.pdf)
+- [Vulkan Style Guide](https://www.khronos.org/registry/vulkan/specs/1.0/styleguide.html)
 
 
 #### Specification Updates
 
+- [Vulkan 1.0.13 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/2656f459333b3a1dc63619a9ebd83490eea22e93)
 - [Vulkan 1.0.12 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/75bbb5f4d52321eed41337cc463aa036748a1352)
 - [Vulkan 1.0.11 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/ce3204c7dd53a0116ce3a91fd12919d606c306f5)
 - [Vulkan 1.0.10 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/3b32b240f6a71aba8e8b746aaab8bba45883de77)

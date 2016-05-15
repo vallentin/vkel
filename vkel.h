@@ -23,11 +23,14 @@
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: May 02, 2016
-//     Revision: 12
-//     Version: 2.0.9
+//     Last Modified Date: May 15, 2016
+//     Revision: 13
+//     Version: 2.0.10
 //
 // Revision History
+//     Revision 13, 2016/05/05
+//       - Updated support for Vulkan 1.0.13
+//
 //     Revision 12, 2016/05/02
 //       - Fixed "for loop initial declarations are only
 //         allowed in C99 mode".
@@ -242,7 +245,7 @@ extern "C" {
 #define VK_VERSION_MAJOR(version) ((uint32_t)(version) >> 22)
 #define VK_VERSION_MINOR(version) (((uint32_t)(version) >> 12) & 0x3ff)
 #define VK_VERSION_PATCH(version) ((uint32_t)(version) & 0xfff)
-#define VK_HEADER_VERSION 12
+#define VK_HEADER_VERSION 13
 
 #define VK_NULL_HANDLE 0
 
@@ -2564,12 +2567,13 @@ VK_DEFINE_NON_DISPATCHABLE_HANDLE(VkSurfaceKHR)
 
 #define VK_KHR_SURFACE_SPEC_VERSION       25
 #define VK_KHR_SURFACE_EXTENSION_NAME     "VK_KHR_surface"
+#define VK_COLORSPACE_SRGB_NONLINEAR_KHR  VK_COLOR_SPACE_SRGB_NONLINEAR_KHR
 
 typedef enum VkColorSpaceKHR {
-    VK_COLORSPACE_SRGB_NONLINEAR_KHR = 0,
-    VK_COLOR_SPACE_BEGIN_RANGE_KHR = VK_COLORSPACE_SRGB_NONLINEAR_KHR,
-    VK_COLOR_SPACE_END_RANGE_KHR = VK_COLORSPACE_SRGB_NONLINEAR_KHR,
-    VK_COLOR_SPACE_RANGE_SIZE_KHR = (VK_COLORSPACE_SRGB_NONLINEAR_KHR - VK_COLORSPACE_SRGB_NONLINEAR_KHR + 1),
+    VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = 0,
+    VK_COLOR_SPACE_BEGIN_RANGE_KHR = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR,
+    VK_COLOR_SPACE_END_RANGE_KHR = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR,
+    VK_COLOR_SPACE_RANGE_SIZE_KHR = (VK_COLOR_SPACE_SRGB_NONLINEAR_KHR - VK_COLOR_SPACE_SRGB_NONLINEAR_KHR + 1),
     VK_COLOR_SPACE_MAX_ENUM_KHR = 0x7FFFFFFF
 } VkColorSpaceKHR;
 

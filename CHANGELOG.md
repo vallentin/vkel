@@ -1,7 +1,10 @@
 
 # vkel - Changelog
 
-## 2.0.10 - Revision 11, 2016/05/12
+## 2.0.11 - Revision 14, 2016/05/16
+- Fixed [issue #2](https://github.com/MrVallentin/vkel/issues/2)
+
+## 2.0.10 - Revision 13, 2016/05/15
 - Updated support for Vulkan 1.0.13
 
 ## 2.0.9 - Revision 12, 2016/05/02

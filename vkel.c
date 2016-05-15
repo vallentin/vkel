@@ -23,12 +23,15 @@
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: May 15, 2016
-//     Revision: 13
-//     Version: 2.0.10
+//     Last Modified Date: May 16, 2016
+//     Revision: 14
+//     Version: 2.0.11
 //
 // Revision History
-//     Revision 13, 2016/05/05
+//     Revision 14, 2016/05/16
+//       - Updated support for Vulkan 1.0.14
+//
+//     Revision 13, 2016/05/15
 //       - Updated support for Vulkan 1.0.13
 //
 //     Revision 12, 2016/05/02
@@ -175,6 +178,240 @@ extern "C" {
 
 static void *vkelVkLibHandle;
 
+
+// Instance and device extension names
+VkBool32 VKEL_AMD_rasterization_order;
+VkBool32 VKEL_EXT_debug_marker;
+VkBool32 VKEL_EXT_debug_report;
+VkBool32 VKEL_IMG_filter_cubic;
+VkBool32 VKEL_KHR_android_surface;
+VkBool32 VKEL_KHR_display;
+VkBool32 VKEL_KHR_display_swapchain;
+VkBool32 VKEL_KHR_mir_surface;
+VkBool32 VKEL_KHR_sampler_mirror_clamp_to_edge;
+VkBool32 VKEL_KHR_surface;
+VkBool32 VKEL_KHR_swapchain;
+VkBool32 VKEL_KHR_wayland_surface;
+VkBool32 VKEL_KHR_win32_surface;
+VkBool32 VKEL_KHR_xcb_surface;
+VkBool32 VKEL_KHR_xlib_surface;
+VkBool32 VKEL_NV_glsl_shader;
+
+// Instance and device layer names
+VkBool32 VKEL_LAYER_GOOGLE_unique_objects;
+VkBool32 VKEL_LAYER_LUNARG_api_dump;
+VkBool32 VKEL_LAYER_LUNARG_device_limits;
+VkBool32 VKEL_LAYER_LUNARG_draw_state;
+VkBool32 VKEL_LAYER_LUNARG_image;
+VkBool32 VKEL_LAYER_LUNARG_mem_tracker;
+VkBool32 VKEL_LAYER_LUNARG_object_tracker;
+VkBool32 VKEL_LAYER_LUNARG_param_checker;
+VkBool32 VKEL_LAYER_LUNARG_screenshot;
+VkBool32 VKEL_LAYER_LUNARG_swapchain;
+VkBool32 VKEL_LAYER_LUNARG_threading;
+VkBool32 VKEL_LAYER_LUNARG_vktrace;
+
+
+// Functions
+PFN_vkAcquireNextImageKHR __vkAcquireNextImageKHR;
+PFN_vkAllocateCommandBuffers __vkAllocateCommandBuffers;
+PFN_vkAllocateDescriptorSets __vkAllocateDescriptorSets;
+PFN_vkAllocateMemory __vkAllocateMemory;
+PFN_vkAllocationFunction __vkAllocationFunction;
+PFN_vkBeginCommandBuffer __vkBeginCommandBuffer;
+PFN_vkBindBufferMemory __vkBindBufferMemory;
+PFN_vkBindImageMemory __vkBindImageMemory;
+PFN_vkCmdBeginQuery __vkCmdBeginQuery;
+PFN_vkCmdBeginRenderPass __vkCmdBeginRenderPass;
+PFN_vkCmdBindDescriptorSets __vkCmdBindDescriptorSets;
+PFN_vkCmdBindIndexBuffer __vkCmdBindIndexBuffer;
+PFN_vkCmdBindPipeline __vkCmdBindPipeline;
+PFN_vkCmdBindVertexBuffers __vkCmdBindVertexBuffers;
+PFN_vkCmdBlitImage __vkCmdBlitImage;
+PFN_vkCmdClearAttachments __vkCmdClearAttachments;
+PFN_vkCmdClearColorImage __vkCmdClearColorImage;
+PFN_vkCmdClearDepthStencilImage __vkCmdClearDepthStencilImage;
+PFN_vkCmdCopyBuffer __vkCmdCopyBuffer;
+PFN_vkCmdCopyBufferToImage __vkCmdCopyBufferToImage;
+PFN_vkCmdCopyImage __vkCmdCopyImage;
+PFN_vkCmdCopyImageToBuffer __vkCmdCopyImageToBuffer;
+PFN_vkCmdCopyQueryPoolResults __vkCmdCopyQueryPoolResults;
+PFN_vkCmdDebugMarkerBeginEXT __vkCmdDebugMarkerBeginEXT;
+PFN_vkCmdDebugMarkerEndEXT __vkCmdDebugMarkerEndEXT;
+PFN_vkCmdDebugMarkerInsertEXT __vkCmdDebugMarkerInsertEXT;
+PFN_vkCmdDispatch __vkCmdDispatch;
+PFN_vkCmdDispatchIndirect __vkCmdDispatchIndirect;
+PFN_vkCmdDraw __vkCmdDraw;
+PFN_vkCmdDrawIndexed __vkCmdDrawIndexed;
+PFN_vkCmdDrawIndexedIndirect __vkCmdDrawIndexedIndirect;
+PFN_vkCmdDrawIndirect __vkCmdDrawIndirect;
+PFN_vkCmdEndQuery __vkCmdEndQuery;
+PFN_vkCmdEndRenderPass __vkCmdEndRenderPass;
+PFN_vkCmdExecuteCommands __vkCmdExecuteCommands;
+PFN_vkCmdFillBuffer __vkCmdFillBuffer;
+PFN_vkCmdNextSubpass __vkCmdNextSubpass;
+PFN_vkCmdPipelineBarrier __vkCmdPipelineBarrier;
+PFN_vkCmdPushConstants __vkCmdPushConstants;
+PFN_vkCmdResetEvent __vkCmdResetEvent;
+PFN_vkCmdResetQueryPool __vkCmdResetQueryPool;
+PFN_vkCmdResolveImage __vkCmdResolveImage;
+PFN_vkCmdSetBlendConstants __vkCmdSetBlendConstants;
+PFN_vkCmdSetDepthBias __vkCmdSetDepthBias;
+PFN_vkCmdSetDepthBounds __vkCmdSetDepthBounds;
+PFN_vkCmdSetEvent __vkCmdSetEvent;
+PFN_vkCmdSetLineWidth __vkCmdSetLineWidth;
+PFN_vkCmdSetScissor __vkCmdSetScissor;
+PFN_vkCmdSetStencilCompareMask __vkCmdSetStencilCompareMask;
+PFN_vkCmdSetStencilReference __vkCmdSetStencilReference;
+PFN_vkCmdSetStencilWriteMask __vkCmdSetStencilWriteMask;
+PFN_vkCmdSetViewport __vkCmdSetViewport;
+PFN_vkCmdUpdateBuffer __vkCmdUpdateBuffer;
+PFN_vkCmdWaitEvents __vkCmdWaitEvents;
+PFN_vkCmdWriteTimestamp __vkCmdWriteTimestamp;
+PFN_vkCreateBuffer __vkCreateBuffer;
+PFN_vkCreateBufferView __vkCreateBufferView;
+PFN_vkCreateCommandPool __vkCreateCommandPool;
+PFN_vkCreateComputePipelines __vkCreateComputePipelines;
+PFN_vkCreateDebugReportCallbackEXT __vkCreateDebugReportCallbackEXT;
+PFN_vkCreateDescriptorPool __vkCreateDescriptorPool;
+PFN_vkCreateDescriptorSetLayout __vkCreateDescriptorSetLayout;
+PFN_vkCreateDevice __vkCreateDevice;
+PFN_vkCreateDisplayModeKHR __vkCreateDisplayModeKHR;
+PFN_vkCreateDisplayPlaneSurfaceKHR __vkCreateDisplayPlaneSurfaceKHR;
+PFN_vkCreateEvent __vkCreateEvent;
+PFN_vkCreateFence __vkCreateFence;
+PFN_vkCreateFramebuffer __vkCreateFramebuffer;
+PFN_vkCreateGraphicsPipelines __vkCreateGraphicsPipelines;
+PFN_vkCreateImage __vkCreateImage;
+PFN_vkCreateImageView __vkCreateImageView;
+PFN_vkCreateInstance __vkCreateInstance;
+PFN_vkCreatePipelineCache __vkCreatePipelineCache;
+PFN_vkCreatePipelineLayout __vkCreatePipelineLayout;
+PFN_vkCreateQueryPool __vkCreateQueryPool;
+PFN_vkCreateRenderPass __vkCreateRenderPass;
+PFN_vkCreateSampler __vkCreateSampler;
+PFN_vkCreateSemaphore __vkCreateSemaphore;
+PFN_vkCreateShaderModule __vkCreateShaderModule;
+PFN_vkCreateSharedSwapchainsKHR __vkCreateSharedSwapchainsKHR;
+PFN_vkCreateSwapchainKHR __vkCreateSwapchainKHR;
+PFN_vkDebugMarkerSetObjectNameEXT __vkDebugMarkerSetObjectNameEXT;
+PFN_vkDebugMarkerSetObjectTagEXT __vkDebugMarkerSetObjectTagEXT;
+PFN_vkDebugReportCallbackEXT __vkDebugReportCallbackEXT;
+PFN_vkDebugReportMessageEXT __vkDebugReportMessageEXT;
+PFN_vkDestroyBuffer __vkDestroyBuffer;
+PFN_vkDestroyBufferView __vkDestroyBufferView;
+PFN_vkDestroyCommandPool __vkDestroyCommandPool;
+PFN_vkDestroyDebugReportCallbackEXT __vkDestroyDebugReportCallbackEXT;
+PFN_vkDestroyDescriptorPool __vkDestroyDescriptorPool;
+PFN_vkDestroyDescriptorSetLayout __vkDestroyDescriptorSetLayout;
+PFN_vkDestroyDevice __vkDestroyDevice;
+PFN_vkDestroyEvent __vkDestroyEvent;
+PFN_vkDestroyFence __vkDestroyFence;
+PFN_vkDestroyFramebuffer __vkDestroyFramebuffer;
+PFN_vkDestroyImage __vkDestroyImage;
+PFN_vkDestroyImageView __vkDestroyImageView;
+PFN_vkDestroyInstance __vkDestroyInstance;
+PFN_vkDestroyPipeline __vkDestroyPipeline;
+PFN_vkDestroyPipelineCache __vkDestroyPipelineCache;
+PFN_vkDestroyPipelineLayout __vkDestroyPipelineLayout;
+PFN_vkDestroyQueryPool __vkDestroyQueryPool;
+PFN_vkDestroyRenderPass __vkDestroyRenderPass;
+PFN_vkDestroySampler __vkDestroySampler;
+PFN_vkDestroySemaphore __vkDestroySemaphore;
+PFN_vkDestroyShaderModule __vkDestroyShaderModule;
+PFN_vkDestroySurfaceKHR __vkDestroySurfaceKHR;
+PFN_vkDestroySwapchainKHR __vkDestroySwapchainKHR;
+PFN_vkDeviceWaitIdle __vkDeviceWaitIdle;
+PFN_vkEndCommandBuffer __vkEndCommandBuffer;
+PFN_vkEnumerateDeviceExtensionProperties __vkEnumerateDeviceExtensionProperties;
+PFN_vkEnumerateDeviceLayerProperties __vkEnumerateDeviceLayerProperties;
+PFN_vkEnumerateInstanceExtensionProperties __vkEnumerateInstanceExtensionProperties;
+PFN_vkEnumerateInstanceLayerProperties __vkEnumerateInstanceLayerProperties;
+PFN_vkEnumeratePhysicalDevices __vkEnumeratePhysicalDevices;
+PFN_vkFlushMappedMemoryRanges __vkFlushMappedMemoryRanges;
+PFN_vkFreeCommandBuffers __vkFreeCommandBuffers;
+PFN_vkFreeDescriptorSets __vkFreeDescriptorSets;
+PFN_vkFreeFunction __vkFreeFunction;
+PFN_vkFreeMemory __vkFreeMemory;
+PFN_vkGetBufferMemoryRequirements __vkGetBufferMemoryRequirements;
+PFN_vkGetDeviceMemoryCommitment __vkGetDeviceMemoryCommitment;
+PFN_vkGetDeviceProcAddr __vkGetDeviceProcAddr;
+PFN_vkGetDeviceQueue __vkGetDeviceQueue;
+PFN_vkGetDisplayModePropertiesKHR __vkGetDisplayModePropertiesKHR;
+PFN_vkGetDisplayPlaneCapabilitiesKHR __vkGetDisplayPlaneCapabilitiesKHR;
+PFN_vkGetDisplayPlaneSupportedDisplaysKHR __vkGetDisplayPlaneSupportedDisplaysKHR;
+PFN_vkGetEventStatus __vkGetEventStatus;
+PFN_vkGetFenceStatus __vkGetFenceStatus;
+PFN_vkGetImageMemoryRequirements __vkGetImageMemoryRequirements;
+PFN_vkGetImageSparseMemoryRequirements __vkGetImageSparseMemoryRequirements;
+PFN_vkGetImageSubresourceLayout __vkGetImageSubresourceLayout;
+PFN_vkGetInstanceProcAddr __vkGetInstanceProcAddr;
+PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR __vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
+PFN_vkGetPhysicalDeviceDisplayPropertiesKHR __vkGetPhysicalDeviceDisplayPropertiesKHR;
+PFN_vkGetPhysicalDeviceFeatures __vkGetPhysicalDeviceFeatures;
+PFN_vkGetPhysicalDeviceFormatProperties __vkGetPhysicalDeviceFormatProperties;
+PFN_vkGetPhysicalDeviceImageFormatProperties __vkGetPhysicalDeviceImageFormatProperties;
+PFN_vkGetPhysicalDeviceMemoryProperties __vkGetPhysicalDeviceMemoryProperties;
+PFN_vkGetPhysicalDeviceProperties __vkGetPhysicalDeviceProperties;
+PFN_vkGetPhysicalDeviceQueueFamilyProperties __vkGetPhysicalDeviceQueueFamilyProperties;
+PFN_vkGetPhysicalDeviceSparseImageFormatProperties __vkGetPhysicalDeviceSparseImageFormatProperties;
+PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR __vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
+PFN_vkGetPhysicalDeviceSurfaceFormatsKHR __vkGetPhysicalDeviceSurfaceFormatsKHR;
+PFN_vkGetPhysicalDeviceSurfacePresentModesKHR __vkGetPhysicalDeviceSurfacePresentModesKHR;
+PFN_vkGetPhysicalDeviceSurfaceSupportKHR __vkGetPhysicalDeviceSurfaceSupportKHR;
+PFN_vkGetPipelineCacheData __vkGetPipelineCacheData;
+PFN_vkGetQueryPoolResults __vkGetQueryPoolResults;
+PFN_vkGetRenderAreaGranularity __vkGetRenderAreaGranularity;
+PFN_vkGetSwapchainImagesKHR __vkGetSwapchainImagesKHR;
+PFN_vkInternalAllocationNotification __vkInternalAllocationNotification;
+PFN_vkInternalFreeNotification __vkInternalFreeNotification;
+PFN_vkInvalidateMappedMemoryRanges __vkInvalidateMappedMemoryRanges;
+PFN_vkMapMemory __vkMapMemory;
+PFN_vkMergePipelineCaches __vkMergePipelineCaches;
+PFN_vkQueueBindSparse __vkQueueBindSparse;
+PFN_vkQueuePresentKHR __vkQueuePresentKHR;
+PFN_vkQueueSubmit __vkQueueSubmit;
+PFN_vkQueueWaitIdle __vkQueueWaitIdle;
+PFN_vkReallocationFunction __vkReallocationFunction;
+PFN_vkResetCommandBuffer __vkResetCommandBuffer;
+PFN_vkResetCommandPool __vkResetCommandPool;
+PFN_vkResetDescriptorPool __vkResetDescriptorPool;
+PFN_vkResetEvent __vkResetEvent;
+PFN_vkResetFences __vkResetFences;
+PFN_vkSetEvent __vkSetEvent;
+PFN_vkUnmapMemory __vkUnmapMemory;
+PFN_vkUpdateDescriptorSets __vkUpdateDescriptorSets;
+PFN_vkVoidFunction __vkVoidFunction;
+PFN_vkWaitForFences __vkWaitForFences;
+
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+PFN_vkCreateAndroidSurfaceKHR __vkCreateAndroidSurfaceKHR;
+#endif /* VK_USE_PLATFORM_ANDROID_KHR */
+
+#ifdef VK_USE_PLATFORM_MIR_KHR
+PFN_vkCreateMirSurfaceKHR __vkCreateMirSurfaceKHR;
+PFN_vkGetPhysicalDeviceMirPresentationSupportKHR __vkGetPhysicalDeviceMirPresentationSupportKHR;
+#endif /* VK_USE_PLATFORM_MIR_KHR */
+
+#ifdef VK_USE_PLATFORM_WAYLAND_KHR
+PFN_vkCreateWaylandSurfaceKHR __vkCreateWaylandSurfaceKHR;
+PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR __vkGetPhysicalDeviceWaylandPresentationSupportKHR;
+#endif /* VK_USE_PLATFORM_WAYLAND_KHR */
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+PFN_vkCreateWin32SurfaceKHR __vkCreateWin32SurfaceKHR;
+PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR __vkGetPhysicalDeviceWin32PresentationSupportKHR;
+#endif /* VK_USE_PLATFORM_WIN32_KHR */
+
+#ifdef VK_USE_PLATFORM_XCB_KHR
+PFN_vkCreateXcbSurfaceKHR __vkCreateXcbSurfaceKHR;
+PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR __vkGetPhysicalDeviceXcbPresentationSupportKHR;
+#endif /* VK_USE_PLATFORM_XCB_KHR */
+
+#ifdef VK_USE_PLATFORM_XLIB_KHR
+PFN_vkCreateXlibSurfaceKHR __vkCreateXlibSurfaceKHR;
+PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR __vkGetPhysicalDeviceXlibPresentationSupportKHR;
+#endif /* VK_USE_PLATFORM_XLIB_KHR */
 
 
 PFN_vkVoidFunction vkelGetProcAddr(const char *name)

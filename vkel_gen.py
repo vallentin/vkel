@@ -28,12 +28,15 @@ COPYRIGHT = br'''//=============================================================
 //     Christian Vallentin <mail@vallentinsource.com>
 //
 // Version History
-//     Last Modified Date: May 15, 2016
-//     Revision: 13
-//     Version: 2.0.10
+//     Last Modified Date: May 16, 2016
+//     Revision: 14
+//     Version: 2.0.11
 //
 // Revision History
-//     Revision 13, 2016/05/05
+//     Revision 14, 2016/05/16
+//       - Updated support for Vulkan 1.0.14
+//
+//     Revision 13, 2016/05/15
 //       - Updated support for Vulkan 1.0.13
 //
 //     Revision 12, 2016/05/02
@@ -421,41 +424,41 @@ extern "C" {
 	
 	
 	f.write(br'''
-PFN_vkVoidFunction vkelGetProcAddr(const char *pName);
+extern PFN_vkVoidFunction vkelGetProcAddr(const char *pName);
 
-PFN_vkVoidFunction vkelGetInstanceProcAddr(VkInstance instance, const char *pName);
-PFN_vkVoidFunction vkelGetDeviceProcAddr(VkDevice device, const char *pName);
-
-
-void vkelDeleteNames(uint32_t nameCount, char **names);
+extern PFN_vkVoidFunction vkelGetInstanceProcAddr(VkInstance instance, const char *pName);
+extern PFN_vkVoidFunction vkelGetDeviceProcAddr(VkDevice device, const char *pName);
 
 
-char** vkelGetInstanceExtensionNames(const char *pLayerName, uint32_t *extensionNameCount);
+extern void vkelDeleteNames(uint32_t nameCount, char **names);
+
+
+extern char** vkelGetInstanceExtensionNames(const char *pLayerName, uint32_t *extensionNameCount);
 #define vkelDeleteInstanceExtensionNames vkelDeleteNames
 
-char** vkelGetInstanceLayerNames(uint32_t *layerNameCount);
+extern char** vkelGetInstanceLayerNames(uint32_t *layerNameCount);
 #define vkelDeleteInstanceLayerNames vkelDeleteNames
 
 
-char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *pLayerName, uint32_t *extensionNameCount);
+extern char** vkelGetDeviceExtensionNames(VkPhysicalDevice physicalDevice, const char *pLayerName, uint32_t *extensionNameCount);
 #define vkelDeleteDeviceExtensionNames vkelDeleteNames
 
-char** vkelGetDeviceLayerNames(VkPhysicalDevice physicalDevice, uint32_t *layerNameCount);
+extern char** vkelGetDeviceLayerNames(VkPhysicalDevice physicalDevice, uint32_t *layerNameCount);
 #define vkelDeleteDeviceLayerNames vkelDeleteNames
 
 
-VkBool32 vkelIsInstanceLayerSupported(const char *pLayerName);
-VkBool32 vkelIsInstanceExtensionSupported(const char *pLayerName, const char *pExtensionName);
+extern VkBool32 vkelIsInstanceLayerSupported(const char *pLayerName);
+extern VkBool32 vkelIsInstanceExtensionSupported(const char *pLayerName, const char *pExtensionName);
 
-VkBool32 vkelIsDeviceLayerSupported(VkPhysicalDevice physicalDevice, const char *pLayerName);
-VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const char *pLayerName, const char *pExtensionName);
+extern VkBool32 vkelIsDeviceLayerSupported(VkPhysicalDevice physicalDevice, const char *pLayerName);
+extern VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const char *pLayerName, const char *pExtensionName);
 
 
-VkBool32 vkelInit(void);
-VkBool32 vkelInstanceInit(VkInstance instance);
-VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device);
+extern VkBool32 vkelInit(void);
+extern VkBool32 vkelInstanceInit(VkInstance instance);
+extern VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device);
 
-void vkelUninit(void);
+extern void vkelUninit(void);
 
 
 ''')
@@ -467,7 +470,7 @@ void vkelUninit(void);
 	if extension_names:
 		for extension_name in sorted(extension_names):
 			if extension_name:
-				f.write("VkBool32 VKEL_{0};\n".format(extension_name).encode("utf-8"))
+				f.write("extern VkBool32 VKEL_{0};\n".format(extension_name).encode("utf-8"))
 	
 	f.write(b"\n")
 	
@@ -478,12 +481,14 @@ void vkelUninit(void);
 	if layer_names:
 		for layer_name in sorted(layer_names):
 			if layer_name:
-				f.write("VkBool32 VKEL_{0};\n".format(layer_name).encode("utf-8"))
+				f.write("extern VkBool32 VKEL_{0};\n".format(layer_name).encode("utf-8"))
 	
 	f.write(b"\n\n")
 	
 	
 	lines = []
+	
+	lines.append("// Functions")
 	
 	# Generate all function pointers
 	for platform in sorted(platform_funcs):
@@ -492,7 +497,9 @@ void vkelUninit(void);
 		
 		for func in sorted(platform_funcs[platform]):
 			# lines.append("PFN_{0} {0};".format(func))
-			lines.append("PFN_{0} __{0};".format(func))
+			# lines.append("PFN_{0} __{0};".format(func))
+			lines.append("extern PFN_{0} __{0};".format(func))
+		
 		
 		if platform:
 			lines.append("#endif /* " + platform + " */")
@@ -599,6 +606,53 @@ static void *vkelVkLibHandle;
 
 
 ''')
+	
+	
+	f.write(b"// Instance and device extension names\n")
+	
+	# Are there any (instance or device) extensions? (is array empty)
+	if extension_names:
+		for extension_name in sorted(extension_names):
+			if extension_name:
+				f.write("VkBool32 VKEL_{0};\n".format(extension_name).encode("utf-8"))
+	
+	f.write(b"\n")
+	
+	
+	f.write(b"// Instance and device layer names\n")
+	
+	# Are there any (instance or device) layers? (is array empty)
+	if layer_names:
+		for layer_name in sorted(layer_names):
+			if layer_name:
+				f.write("VkBool32 VKEL_{0};\n".format(layer_name).encode("utf-8"))
+	
+	f.write(b"\n\n")
+	
+	
+	lines = []
+	
+	lines.append("// Functions")
+	
+	# Generate all function pointers
+	for platform in sorted(platform_funcs):
+		if platform:
+			lines.append("#ifdef " + platform)
+		
+		for func in sorted(platform_funcs[platform]):
+			# lines.append("PFN_{0} {0};".format(func))
+			lines.append("PFN_{0} __{0};".format(func))
+		
+		
+		if platform:
+			lines.append("#endif /* " + platform + " */")
+		
+		lines.append("")
+	
+	lines.append("")
+	
+	f.write("\n".join(lines).encode("utf-8"))
+	
 	
 	
 	f.write(br'''

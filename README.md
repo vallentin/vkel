@@ -3,9 +3,9 @@
 *Simple Dynamic Cross-Platform Vulkan Extension Loader*
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Release](https://img.shields.io/badge/release-v2.0.9-blue.svg)
+![Release](https://img.shields.io/badge/release-v2.0.11-blue.svg)
 
-*Updated for [Vulkan 1.0.12](https://www.khronos.org/registry/vulkan/#apispecs).*
+*Updated for [Vulkan 1.0.13](https://www.khronos.org/registry/vulkan/#apispecs).*
 
 
 #### Vulkan Documentation

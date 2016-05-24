@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Release](https://img.shields.io/badge/release-v2.0.11-blue.svg)
 
-*Updated for [Vulkan 1.0.13](https://www.khronos.org/registry/vulkan/#apispecs).*
+*Updated for [Vulkan 1.0.14](https://www.khronos.org/registry/vulkan/#apispecs).*
 
 
 #### Vulkan Documentation
@@ -25,6 +25,7 @@
 
 #### Specification Updates
 
+- [Vulkan 1.0.14 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/b3d48022bb60ddf67a6699b4c5aa64d52bb1cd4a)
 - [Vulkan 1.0.13 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/2656f459333b3a1dc63619a9ebd83490eea22e93)
 - [Vulkan 1.0.12 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/75bbb5f4d52321eed41337cc463aa036748a1352)
 - [Vulkan 1.0.11 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/ce3204c7dd53a0116ce3a91fd12919d606c306f5)

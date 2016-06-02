@@ -3026,6 +3026,14 @@ typedef struct VkPipelineRasterizationStateRasterizationOrderAMD {
     VkRasterizationOrderAMD    rasterizationOrder;
 } VkPipelineRasterizationStateRasterizationOrderAMD;
 
+#define VK_AMD_shader_trinary_minmax 1
+#define VK_AMD_SHADER_TRINARY_MINMAX_SPEC_VERSION 1
+#define VK_AMD_SHADER_TRINARY_MINMAX_EXTENSION_NAME "VK_AMD_shader_trinary_minmax"
+
+#define VK_AMD_shader_explicit_vertex_parameter 1
+#define VK_AMD_SHADER_EXPLICIT_VERTEX_PARAMETER_SPEC_VERSION 1
+#define VK_AMD_SHADER_EXPLICIT_VERTEX_PARAMETER_EXTENSION_NAME "VK_AMD_shader_explicit_vertex_parameter"
+
 #define VK_EXT_debug_marker 1
 #define VK_EXT_DEBUG_MARKER_SPEC_VERSION  3
 #define VK_EXT_DEBUG_MARKER_EXTENSION_NAME "VK_EXT_debug_marker"
@@ -3060,6 +3068,10 @@ typedef VkResult (VKAPI_PTR *PFN_vkDebugMarkerSetObjectNameEXT)(VkDevice device,
 typedef void (VKAPI_PTR *PFN_vkCmdDebugMarkerBeginEXT)(VkCommandBuffer commandBuffer, VkDebugMarkerMarkerInfoEXT* pMarkerInfo);
 typedef void (VKAPI_PTR *PFN_vkCmdDebugMarkerEndEXT)(VkCommandBuffer commandBuffer);
 typedef void (VKAPI_PTR *PFN_vkCmdDebugMarkerInsertEXT)(VkCommandBuffer commandBuffer, VkDebugMarkerMarkerInfoEXT* pMarkerInfo);
+
+#define VK_AMD_gcn_shader 1
+#define VK_AMD_GCN_SHADER_SPEC_VERSION    1
+#define VK_AMD_GCN_SHADER_EXTENSION_NAME  "VK_AMD_gcn_shader"
 
 #endif
 
@@ -3102,7 +3114,10 @@ extern void vkelUninit(void);
 
 
 // Instance and device extension names
+extern VkBool32 VKEL_AMD_gcn_shader;
 extern VkBool32 VKEL_AMD_rasterization_order;
+extern VkBool32 VKEL_AMD_shader_explicit_vertex_parameter;
+extern VkBool32 VKEL_AMD_shader_trinary_minmax;
 extern VkBool32 VKEL_EXT_debug_marker;
 extern VkBool32 VKEL_EXT_debug_report;
 extern VkBool32 VKEL_IMG_filter_cubic;

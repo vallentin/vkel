@@ -180,7 +180,10 @@ static void *vkelVkLibHandle;
 
 
 // Instance and device extension names
+VkBool32 VKEL_AMD_gcn_shader;
 VkBool32 VKEL_AMD_rasterization_order;
+VkBool32 VKEL_AMD_shader_explicit_vertex_parameter;
+VkBool32 VKEL_AMD_shader_trinary_minmax;
 VkBool32 VKEL_EXT_debug_marker;
 VkBool32 VKEL_EXT_debug_report;
 VkBool32 VKEL_IMG_filter_cubic;
@@ -976,7 +979,10 @@ VkBool32 vkelInit(void)
 
 
 	// Instance and device extension names
+	VKEL_AMD_gcn_shader = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_gcn_shader");
 	VKEL_AMD_rasterization_order = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_rasterization_order");
+	VKEL_AMD_shader_explicit_vertex_parameter = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_shader_explicit_vertex_parameter");
+	VKEL_AMD_shader_trinary_minmax = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_shader_trinary_minmax");
 	VKEL_EXT_debug_marker = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_marker");
 	VKEL_EXT_debug_report = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_filter_cubic");
@@ -1219,7 +1225,10 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 
 
 	// Instance and device extension names
+	VKEL_AMD_gcn_shader = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_gcn_shader");
 	VKEL_AMD_rasterization_order = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_rasterization_order");
+	VKEL_AMD_shader_explicit_vertex_parameter = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_shader_explicit_vertex_parameter");
+	VKEL_AMD_shader_trinary_minmax = vkelIsInstanceExtensionSupported(NULL, "VK_AMD_shader_trinary_minmax");
 	VKEL_EXT_debug_marker = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_marker");
 	VKEL_EXT_debug_report = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_filter_cubic");
@@ -1462,7 +1471,10 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 
 
 	// Instance and device extension names
+	VKEL_AMD_gcn_shader = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_AMD_gcn_shader");
 	VKEL_AMD_rasterization_order = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_AMD_rasterization_order");
+	VKEL_AMD_shader_explicit_vertex_parameter = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_AMD_shader_explicit_vertex_parameter");
+	VKEL_AMD_shader_trinary_minmax = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_AMD_shader_trinary_minmax");
 	VKEL_EXT_debug_marker = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_EXT_debug_marker");
 	VKEL_EXT_debug_report = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_IMG_filter_cubic");

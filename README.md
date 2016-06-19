@@ -5,10 +5,10 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Release](https://img.shields.io/badge/release-v2.0.11-blue.svg)
 
-*Updated for [Vulkan 1.0.14](https://www.khronos.org/registry/vulkan/#apispecs).*
-
 
 #### Vulkan Documentation
+
+- [Khronos Vulkan Registry](https://www.khronos.org/registry/vulkan/)
 
 - [Vulkan 1.0 API References](https://www.khronos.org/registry/vulkan/specs/1.0/apispec.html)
 [[PDF](https://www.khronos.org/registry/vulkan/specs/1.0/apispec.pdf)]
@@ -25,6 +25,9 @@
 
 #### Specification Updates
 
+- [Vulkan 1.0.17 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/31018cf088c921ab90ec69dee033875807e8faec)
+- [Vulkan 1.0.16 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5de77cf663c84cc2edfa355c49319dca0a869eb2)
+- [Vulkan 1.0.15 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/36ce3ba5c1454e3649d3ba60791b0c7009670d25)
 - [Vulkan 1.0.14 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/b3d48022bb60ddf67a6699b4c5aa64d52bb1cd4a)
 - [Vulkan 1.0.13 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/2656f459333b3a1dc63619a9ebd83490eea22e93)
 - [Vulkan 1.0.12 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/75bbb5f4d52321eed41337cc463aa036748a1352)

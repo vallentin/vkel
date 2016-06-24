@@ -248,7 +248,7 @@ extern "C" {
 #define VK_VERSION_MAJOR(version) ((uint32_t)(version) >> 22)
 #define VK_VERSION_MINOR(version) (((uint32_t)(version) >> 12) & 0x3ff)
 #define VK_VERSION_PATCH(version) ((uint32_t)(version) & 0xfff)
-#define VK_HEADER_VERSION 17
+#define VK_HEADER_VERSION 18
 
 #define VK_NULL_HANDLE 0
 

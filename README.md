@@ -25,6 +25,7 @@
 
 #### Specification Updates
 
+- [Vulkan 1.0.18 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/eb9997129d954d52d8772c7f4a19a0bccedc8faa)
 - [Vulkan 1.0.17 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/31018cf088c921ab90ec69dee033875807e8faec)
 - [Vulkan 1.0.16 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5de77cf663c84cc2edfa355c49319dca0a869eb2)
 - [Vulkan 1.0.15 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/36ce3ba5c1454e3649d3ba60791b0c7009670d25)

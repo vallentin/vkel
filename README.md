@@ -6,18 +6,33 @@
 ![Release](https://img.shields.io/badge/release-v2.0.11-blue.svg)
 
 
+## Introduction
+
+[vkel][vkel] is a simple and easy way of dynamically loading
+Vulkan and its function pointers.
+[vkel][vkel] can also be used to check which (instance or device)
+extensions and layers are available.
+
+*Also yes, the idea of [vkel][vkel] is indeed
+based on [GLEW](https://github.com/nigels-com/glew) and [gl3w](https://github.com/skaslev/gl3w).*
+
+**Notice:** ~~Your driver might not support the newest released patch, so instead of using
+`VK_API_VERSION` use something like `VK_MAKE_VERSION(1, 0, 3)`.~~ In Vulkan 1.0.6 the
+`VK_API_VERSION` macro was deprecated and removed, in favor of using `VK_MAKE_VERSION(1, 0, 6)`.
+
+
 #### Vulkan Documentation
 
 - [Khronos Vulkan Registry](https://www.khronos.org/registry/vulkan/)
 
-- [Vulkan 1.0 API References](https://www.khronos.org/registry/vulkan/specs/1.0/apispec.html)
-[[PDF](https://www.khronos.org/registry/vulkan/specs/1.0/apispec.pdf)]
-- [Vulkan 1.0.X Specification](https://www.khronos.org/registry/vulkan/specs/1.0/xhtml/vkspec.html)
-[[PDF](https://www.khronos.org/registry/vulkan/specs/1.0/pdf/vkspec.pdf)]
-- [Vulkan 1.0.X + WSI Extension Specification](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/xhtml/vkspec.html)
-[[PDF](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/pdf/vkspec.pdf)]
+
+- [Vulkan 1.0 API References](https://www.khronos.org/registry/vulkan/specs/1.0/apispec.html) [[PDF](https://www.khronos.org/registry/vulkan/specs/1.0/apispec.pdf)]
+- [Vulkan 1.0.X Specification](https://www.khronos.org/registry/vulkan/specs/1.0/xhtml/vkspec.html) [[PDF](https://www.khronos.org/registry/vulkan/specs/1.0/pdf/vkspec.pdf)]
+- [Vulkan 1.0.X + WSI Extension Specification](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/xhtml/vkspec.html) [[PDF](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/pdf/vkspec.pdf)]
+
 
 - [Vulkan 1.0 Quick Reference [PDF]](https://www.khronos.org/registry/vulkan/specs/1.0/refguide/Vulkan-1.0-web.pdf)
+
 
 - [The Khronos Vulkan API Registry for Vulkan [PDF]](https://www.khronos.org/registry/vulkan/specs/1.0/readme.pdf)
 - [Vulkan Style Guide](https://www.khronos.org/registry/vulkan/specs/1.0/styleguide.html)
@@ -25,6 +40,7 @@
 
 #### Specification Updates
 
+- [Vulkan 1.0.19 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/e5b16130fe5f5c0a8ffd801aa9ea706ef5b63dc8)
 - [Vulkan 1.0.18 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/eb9997129d954d52d8772c7f4a19a0bccedc8faa)
 - [Vulkan 1.0.17 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/31018cf088c921ab90ec69dee033875807e8faec)
 - [Vulkan 1.0.16 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5de77cf663c84cc2edfa355c49319dca0a869eb2)
@@ -41,20 +57,6 @@
 - [Vulkan 1.0.5 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/7380aee56b53e9ea3647186ec477202f7f17e28c)
 - [Vulkan 1.0.4 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5a4c5e5925c65c6e6677c1fb21571684b4b0a77b)
 
-
-## Introduction
-
-[vkel][vkel] is a simple and easy way of dynamically loading
-Vulkan and its function pointers.
-[vkel][vkel] can also be used to check which (instance or device)
-extensions and layers are available.
-
-*Also yes, the idea of [vkel][vkel] is indeed
-based on [GLEW](https://github.com/nigels-com/glew) and [gl3w](https://github.com/skaslev/gl3w).*
-
-**Notice:** ~~Your driver might not support the newest released patch, so instead of using
-`VK_API_VERSION` use something like `VK_MAKE_VERSION(1, 0, 3)`.~~ In Vulkan 1.0.6 the
-`VK_API_VERSION` macro was deprecated and removed, in favor of using `VK_MAKE_VERSION(1, 0, 6)`.
 
 ## Setup
 

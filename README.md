@@ -38,26 +38,6 @@ based on [GLEW](https://github.com/nigels-com/glew) and [gl3w](https://github.co
 - [Vulkan Style Guide](https://www.khronos.org/registry/vulkan/specs/1.0/styleguide.html)
 
 
-#### Specification Updates
-
-- [Vulkan 1.0.19 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/e5b16130fe5f5c0a8ffd801aa9ea706ef5b63dc8)
-- [Vulkan 1.0.18 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/eb9997129d954d52d8772c7f4a19a0bccedc8faa)
-- [Vulkan 1.0.17 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/31018cf088c921ab90ec69dee033875807e8faec)
-- [Vulkan 1.0.16 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5de77cf663c84cc2edfa355c49319dca0a869eb2)
-- [Vulkan 1.0.15 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/36ce3ba5c1454e3649d3ba60791b0c7009670d25)
-- [Vulkan 1.0.14 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/b3d48022bb60ddf67a6699b4c5aa64d52bb1cd4a)
-- [Vulkan 1.0.13 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/2656f459333b3a1dc63619a9ebd83490eea22e93)
-- [Vulkan 1.0.12 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/75bbb5f4d52321eed41337cc463aa036748a1352)
-- [Vulkan 1.0.11 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/ce3204c7dd53a0116ce3a91fd12919d606c306f5)
-- [Vulkan 1.0.10 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/3b32b240f6a71aba8e8b746aaab8bba45883de77)
-- [Vulkan 1.0.9 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5d10fc3089ba0ec6a4c7d757a4b18a9ef215d2fb)
-- [Vulkan 1.0.8 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/ce3204c7dd53a0116ce3a91fd12919d606c306f5)
-- [Vulkan 1.0.7 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/8c3c9b4c85f2539b67148c2de9e2573154c92786)
-- [Vulkan 1.0.6 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/1f875738fd9bd0aca5d36bf36794b4b2903e74a9)
-- [Vulkan 1.0.5 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/7380aee56b53e9ea3647186ec477202f7f17e28c)
-- [Vulkan 1.0.4 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5a4c5e5925c65c6e6677c1fb21571684b4b0a77b)
-
-
 ## Setup
 
 [vkel][vkel] doesn't (any more) require the vulkan headers.
@@ -368,6 +348,27 @@ freely, subject to the following restrictions:
 Vulkan™ and the Vulkan logo are trademarks of the Khronos Group Inc.
 
 ![Vulkan Logo](http://advvulkan.com/Vulkan_500px_Mar15.png)
+
+
+#### Specification Updates
+
+- [Vulkan 1.0.20 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/e2d981c029105664380e05e61cacc1cab34b1083)
+- [Vulkan 1.0.19 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/e5b16130fe5f5c0a8ffd801aa9ea706ef5b63dc8)
+- [Vulkan 1.0.18 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/eb9997129d954d52d8772c7f4a19a0bccedc8faa)
+- [Vulkan 1.0.17 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/31018cf088c921ab90ec69dee033875807e8faec)
+- [Vulkan 1.0.16 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5de77cf663c84cc2edfa355c49319dca0a869eb2)
+- [Vulkan 1.0.15 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/36ce3ba5c1454e3649d3ba60791b0c7009670d25)
+- [Vulkan 1.0.14 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/b3d48022bb60ddf67a6699b4c5aa64d52bb1cd4a)
+- [Vulkan 1.0.13 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/2656f459333b3a1dc63619a9ebd83490eea22e93)
+- [Vulkan 1.0.12 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/75bbb5f4d52321eed41337cc463aa036748a1352)
+- [Vulkan 1.0.11 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/ce3204c7dd53a0116ce3a91fd12919d606c306f5)
+- [Vulkan 1.0.10 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/3b32b240f6a71aba8e8b746aaab8bba45883de77)
+- [Vulkan 1.0.9 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5d10fc3089ba0ec6a4c7d757a4b18a9ef215d2fb)
+- [Vulkan 1.0.8 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/ce3204c7dd53a0116ce3a91fd12919d606c306f5)
+- [Vulkan 1.0.7 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/8c3c9b4c85f2539b67148c2de9e2573154c92786)
+- [Vulkan 1.0.6 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/1f875738fd9bd0aca5d36bf36794b4b2903e74a9)
+- [Vulkan 1.0.5 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/7380aee56b53e9ea3647186ec477202f7f17e28c)
+- [Vulkan 1.0.4 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/5a4c5e5925c65c6e6677c1fb21571684b4b0a77b)
 
 
 [vkel]: https://github.com/MrVallentin/vkel

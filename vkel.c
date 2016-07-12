@@ -198,6 +198,7 @@ VkBool32 VKEL_KHR_wayland_surface;
 VkBool32 VKEL_KHR_win32_surface;
 VkBool32 VKEL_KHR_xcb_surface;
 VkBool32 VKEL_KHR_xlib_surface;
+VkBool32 VKEL_NV_dedicated_allocation;
 VkBool32 VKEL_NV_glsl_shader;
 
 // Instance and device layer names
@@ -997,6 +998,7 @@ VkBool32 vkelInit(void)
 	VKEL_KHR_win32_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_win32_surface");
 	VKEL_KHR_xcb_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_xcb_surface");
 	VKEL_KHR_xlib_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_xlib_surface");
+	VKEL_NV_dedicated_allocation = vkelIsInstanceExtensionSupported(NULL, "VK_NV_dedicated_allocation");
 	VKEL_NV_glsl_shader = vkelIsInstanceExtensionSupported(NULL, "VK_NV_glsl_shader");
 
 	// Instance and device layer names
@@ -1243,6 +1245,7 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 	VKEL_KHR_win32_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_win32_surface");
 	VKEL_KHR_xcb_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_xcb_surface");
 	VKEL_KHR_xlib_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_xlib_surface");
+	VKEL_NV_dedicated_allocation = vkelIsInstanceExtensionSupported(NULL, "VK_NV_dedicated_allocation");
 	VKEL_NV_glsl_shader = vkelIsInstanceExtensionSupported(NULL, "VK_NV_glsl_shader");
 
 	// Instance and device layer names
@@ -1489,6 +1492,7 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 	VKEL_KHR_win32_surface = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_win32_surface");
 	VKEL_KHR_xcb_surface = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_xcb_surface");
 	VKEL_KHR_xlib_surface = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_xlib_surface");
+	VKEL_NV_dedicated_allocation = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_NV_dedicated_allocation");
 	VKEL_NV_glsl_shader = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_NV_glsl_shader");
 
 	// Instance and device layer names

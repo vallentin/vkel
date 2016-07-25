@@ -316,7 +316,7 @@ If you have a solution, then feel free to fork it as well and the changes will b
 - Standard C Libraries (stdio, stdlib, string, assert) - needed for NULL, malloc() calloc(), free(), memset(), assert()
 
 
-### License & Copyright
+## License & Copyright
 
 ```
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
@@ -343,15 +343,17 @@ freely, subject to the following restrictions:
    distribution.
 ```
 
-#### Additional Copyright
+### Additional Copyright
 
 Vulkan™ and the Vulkan logo are trademarks of the Khronos Group Inc.
 
 ![Vulkan Logo](http://advvulkan.com/Vulkan_500px_Mar15.png)
 
 
-#### Specification Updates
+## Specification Updates
 
+- [Vulkan 1.0.22 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/1ca0ea1ef0ed61ee2e2e818f9616a30e9fc70483)
+- [Vulkan 1.0.21 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/f4c4113d070c0c9b55b4482055be054dd6466c96)
 - [Vulkan 1.0.20 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/e2d981c029105664380e05e61cacc1cab34b1083)
 - [Vulkan 1.0.19 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/e5b16130fe5f5c0a8ffd801aa9ea706ef5b63dc8)
 - [Vulkan 1.0.18 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/eb9997129d954d52d8772c7f4a19a0bccedc8faa)

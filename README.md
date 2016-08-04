@@ -316,6 +316,26 @@ If you have a solution, then feel free to fork it as well and the changes will b
 - Standard C Libraries (stdio, stdlib, string, assert) - needed for NULL, malloc() calloc(), free(), memset(), assert()
 
 
+## What's New? / Changelog
+
+- May 05, 2016
+  - Fixed [issue #2](https://github.com/MrVallentin/vkel/issues/2)
+- May 02, 2016
+  - Fixed "for loop initial declarations are only allowed in C99 mode".
+- Feb 26, 2016
+  - Rewrote vkel_gen.py, now it parses and directly adds vulkan.h and vk_platform.h into vkel.h,
+  along with moving the appropriate copyrights to the top of vkel.h.
+  - Fixed/added better differentiation for instance and device related calls.
+  - Removed the need for having the vukan.h and vk_platform.h headers.
+- Feb 24, 2016
+  - Created a Python script for automatically generating all the extensions and their functions. (Developed and tested using Python 3.5.1)
+  - Added cross-platform support, for loading libraries and getting the function addresses.
+  - Fixed so platform specific functions defaults to NULL
+  - Added missing include for dlfcn (used on non-Window OS')
+- Feb 23, 2016
+  - Implemented the basic version supporting a few (manually written) dynamically loaded functions.
+
+
 ## License
 
 ```

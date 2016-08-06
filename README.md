@@ -371,6 +371,7 @@ Vulkan™ and the Vulkan logo are trademarks of the Khronos Group Inc.
 
 ## Specification Updates
 
+- [Vulkan 1.0.23 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/7f7686d7f2b7c6d780354ca544386476a04c17c4)
 - [Vulkan 1.0.22 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/1ca0ea1ef0ed61ee2e2e818f9616a30e9fc70483)
 - [Vulkan 1.0.21 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/f4c4113d070c0c9b55b4482055be054dd6466c96)
 - [Vulkan 1.0.20 Specification Update](https://github.com/KhronosGroup/Vulkan-Docs/commit/e2d981c029105664380e05e61cacc1cab34b1083)

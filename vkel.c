@@ -156,6 +156,7 @@ VkBool32 VKEL_AMD_shader_trinary_minmax;
 VkBool32 VKEL_EXT_debug_marker;
 VkBool32 VKEL_EXT_debug_report;
 VkBool32 VKEL_IMG_filter_cubic;
+VkBool32 VKEL_IMG_format_pvrtc;
 VkBool32 VKEL_KHR_android_surface;
 VkBool32 VKEL_KHR_display;
 VkBool32 VKEL_KHR_display_swapchain;
@@ -956,6 +957,7 @@ VkBool32 vkelInit(void)
 	VKEL_EXT_debug_marker = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_marker");
 	VKEL_EXT_debug_report = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_filter_cubic");
+	VKEL_IMG_format_pvrtc = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_format_pvrtc");
 	VKEL_KHR_android_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_android_surface");
 	VKEL_KHR_display = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_display");
 	VKEL_KHR_display_swapchain = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_display_swapchain");
@@ -1203,6 +1205,7 @@ VkBool32 vkelInstanceInit(VkInstance instance)
 	VKEL_EXT_debug_marker = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_marker");
 	VKEL_EXT_debug_report = vkelIsInstanceExtensionSupported(NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_filter_cubic");
+	VKEL_IMG_format_pvrtc = vkelIsInstanceExtensionSupported(NULL, "VK_IMG_format_pvrtc");
 	VKEL_KHR_android_surface = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_android_surface");
 	VKEL_KHR_display = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_display");
 	VKEL_KHR_display_swapchain = vkelIsInstanceExtensionSupported(NULL, "VK_KHR_display_swapchain");
@@ -1450,6 +1453,7 @@ VkBool32 vkelDeviceInit(VkPhysicalDevice physicalDevice, VkDevice device)
 	VKEL_EXT_debug_marker = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_EXT_debug_marker");
 	VKEL_EXT_debug_report = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_EXT_debug_report");
 	VKEL_IMG_filter_cubic = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_IMG_filter_cubic");
+	VKEL_IMG_format_pvrtc = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_IMG_format_pvrtc");
 	VKEL_KHR_android_surface = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_android_surface");
 	VKEL_KHR_display = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_display");
 	VKEL_KHR_display_swapchain = vkelIsDeviceExtensionSupported(physicalDevice, NULL, "VK_KHR_display_swapchain");

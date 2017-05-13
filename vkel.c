@@ -654,7 +654,7 @@ VkBool32 vkelIsInstanceLayerSupported(const char *pLayerName)
 	uint32_t layerNameIndex = 0;
 	for (layerNameIndex = 0; layerNameIndex < layerNameCount; layerNameIndex++)
 	{
-		if (vkel_strcmp(layerNames[layerNameIndex], pLayerName))
+		if (vkel_strcmp(layerNames[layerNameIndex], pLayerName) == 0)
 		{
 			vkelDeleteInstanceLayerNames(layerNameCount, layerNames);
 
@@ -675,7 +675,7 @@ VkBool32 vkelIsInstanceExtensionSupported(const char *pLayerName, const char *pE
 	uint32_t extensionNameIndex = 0;
 	for (extensionNameIndex = 0; extensionNameIndex < extensionNameCount; extensionNameIndex++)
 	{
-		if (vkel_strcmp(extensionNames[extensionNameIndex], pExtensionName))
+		if (vkel_strcmp(extensionNames[extensionNameIndex], pExtensionName) == 0)
 		{
 			vkelDeleteInstanceExtensionNames(extensionNameCount, extensionNames);
 
@@ -697,7 +697,7 @@ VkBool32 vkelIsDeviceLayerSupported(VkPhysicalDevice physicalDevice, const char 
 	uint32_t layerNameIndex = 0;
 	for (layerNameIndex = 0; layerNameIndex < layerNameCount; layerNameIndex++)
 	{
-		if (vkel_strcmp(layerNames[layerNameIndex], pLayerName))
+		if (vkel_strcmp(layerNames[layerNameIndex], pLayerName) == 0)
 		{
 			vkelDeleteDeviceLayerNames(layerNameCount, layerNames);
 
@@ -718,7 +718,7 @@ VkBool32 vkelIsDeviceExtensionSupported(VkPhysicalDevice physicalDevice, const c
 	uint32_t extensionNameIndex = 0;
 	for (extensionNameIndex = 0; extensionNameIndex < extensionNameCount; extensionNameIndex++)
 	{
-		if (vkel_strcmp(extensionNames[extensionNameIndex], pExtensionName))
+		if (vkel_strcmp(extensionNames[extensionNameIndex], pExtensionName) == 0)
 		{
 			vkelDeleteDeviceExtensionNames(extensionNameCount, extensionNames);
 
